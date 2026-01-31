@@ -23,7 +23,7 @@ This guide was developed and tested on:
 
 Before you begin, you'll need:
 
-- macOS (this guide was verified on Tahoe 26.2, but other versions should work)
+- **macOS 14 Sonoma or later** (required for Ollama)
 - Basic familiarity with terminal/command line
 
 ## 🚦 Quick Start
@@ -39,7 +39,7 @@ Ensure you have Ollama v0.15 or later:
 ollama --version
 ```
 
-If you need to update, download the latest from [ollama.com/download](https://ollama.com/download).
+If you need to update, download the latest from [ollama.com/download](https://ollama.com/download) (~104.3 MB for macOS).
 
 ### Step 2: Install Claude Code
 
@@ -55,9 +55,15 @@ After installation, restart your terminal and verify:
 claude --version
 ```
 
+**Important**: Add Claude Code to your PATH (if prompted during installation):
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+```
+
 ### Step 3: Pull a Coding Model
 
-For this guide, we're using a local model that runs entirely on your MacBook Pro:
+For this guide, we're using a local model that runs entirely on your local machine:
 
 ```bash
 ollama pull qwen2.5-coder:7b
@@ -97,32 +103,85 @@ ollama launch claude --model gpt-oss:20b
 
 ### Step 4: Configure Context Length (Local Models Only)
 
-**Important:** For local models, increase the context length from the default 4,096 to 64,000 tokens.
-
-Open Ollama's settings and update the context length to at least 64,000 tokens. This is required for multi-file operations and tool calls.
+**⚠️ IMPORTANT**: The context length configuration in the README may not work as expected. The `ollama launch` command should handle this automatically, but if you encounter issues, see the troubleshooting section below.
 
 **Note:** Cloud models automatically run at full context length, so you can skip this step if using cloud models.
 
 ### Step 5: Launch Claude Code
 
-Simply run:
-
-```bash
-ollama launch claude
-```
-
-That's it! The `launch` command will:
-- Set up all environment variables automatically
-- Present a model selection menu
-- Launch Claude Code with your chosen model
-
-You can also specify the model directly:
+**⚠️ CRITICAL**: Always specify the model explicitly to avoid accidentally using cloud models:
 
 ```bash
 ollama launch claude --model qwen2.5-coder:7b
 ```
 
-Claude Code will start and connect to your local Ollama instance, running the `qwen2.5-coder:7b` model entirely on your MacBook Pro.
+**Do NOT use** `ollama launch claude` without specifying a model, as it may default to cloud models and incur billing charges.
+
+The `launch` command will:
+- Set up all environment variables automatically
+- Launch Claude Code with your specified local model
+
+Claude Code will start and connect to your local Ollama instance, running the `qwen2.5-coder:7b` model entirely on your local machine.
+
+## 🔌 IDE Integration
+
+Claude Code works standalone but also integrates with popular IDEs:
+
+### VS Code
+Install the official Claude Code extension from the VS Code marketplace
+
+### Windsurf/Cursor
+Claude Code should integrate automatically - if you see "IDE disconnected" messages, the core functionality still works with local models
+
+### Other IDEs
+Check the [Claude Code documentation](https://docs.anthropic.com/claude/docs/claude-code) for additional integration options
+
+**Note**: IDE integration is optional - Claude Code works perfectly fine from the terminal with local Ollama models.
+
+## ✅ Verify Local-Only Setup
+
+To confirm you're using local models (no cloud billing):
+
+1. **Check the model name**: Look for `qwen2.5-coder:7b` or other local model names in Claude Code's interface
+2. **No auth conflicts**: You should NOT see authentication conflict warnings
+3. **Status check**: Run `claude /status` - it should show your local model, not `claude-sonnet` or similar cloud models
+
+**Correct local setup shows:**
+- Model: `qwen2.5-coder:7b` (or other local model)
+- No authentication warnings
+- Token usage: **"↑ 0 tokens"** (confirming no cloud billing)
+- Optional: "/model to try Opus 4.5" (means you can switch to cloud, but aren't currently)
+
+**Incorrect cloud setup shows:**
+- Model: `claude-sonnet-4-5-20250929` or similar
+- Auth conflict warnings
+- Active API key usage
+- Token usage showing actual token counts (being billed)
+
+### Troubleshooting
+If you see cloud models being used:
+```bash
+# Clear Anthropic credentials
+claude /logout
+unset ANTHROPIC_AUTH_TOKEN
+
+# Relaunch with EXPLICIT model specification
+ollama launch claude --model qwen2.5-coder:7b
+```
+
+**⚠️ Always use `--model` parameter** - `ollama launch claude` without a model may default to cloud models and incur charges!
+
+**Common Issues:**
+- **"Sonnet 4.5" appears**: You're using cloud models, not local
+- **"Missing API key"**: Claude Code wants Anthropic credentials
+- **"API Usage Billing"**: Likely using cloud services
+- **Solution**: Always specify `--model qwen2.5-coder:7b` (or other local model)
+
+### ⚠️ DANGER: /model Command
+- You may see `/model to try Opus 4.5` in the interface
+- **DO NOT type `/model`** - this will switch you to paid cloud models
+- This is an upsell mechanism that can lead to unexpected billing
+- If you accidentally switch to cloud, use the logout steps above immediately
 
 ## 📚 Additional Documentation
 
