@@ -144,7 +144,22 @@ To confirm you're using local models (no cloud billing):
 
 1. **Check the model name**: Look for your local model name (e.g., `qwen2.5-coder:7b` or `gpt-oss:20b`) in Claude Code's interface
 2. **No auth conflicts**: You should NOT see authentication conflict warnings
-3. **Status check**: Run `claude /status` – it will report the API‑side default model (`claude-sonnet-4-5-…`) but the model actually used locally is the one you specified. The local model runs without billing.
+3. **Status check**: Run `/status` within Claude Code – it will show your current configuration. Here's example output for a local setup:
+
+```
+Version: 2.1.27
+Session name: /rename to add a name
+Session ID: 51c15324-528f-4dbf-b613-ae5934ed3000
+cwd: /Users/rob/repos/how-to-setup-local-ollama-with-claude-code
+Auth token: ANTHROPIC_AUTH_TOKEN
+Anthropic base URL: http://localhost:11434
+
+Model: gpt-oss:20b
+Memory:
+Setting sources: Shared project settings
+```
+
+The status shows your local model (e.g., `gpt-oss:20b`) and localhost URL, confirming local-only operation.
 
 **Correct local setup shows:**
 - Model: `qwen2.5-coder:7b` (or other local model)
