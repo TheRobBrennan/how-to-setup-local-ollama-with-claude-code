@@ -1,102 +1,144 @@
-# Starting Point
+# 🚀 Setup Local Ollama with Claude Code on macOS
 
-A clean starting point for new projects with pre-configured GitHub Actions workflows and Windsurf rules integration. This template provides a solid foundation for your projects with automated workflows for PR validation, semantic versioning enforcement, and more.
+Complete guide to setting up Claude Code with free local Ollama on macOS - no API keys, no billing.
 
-## 🚀 Features
+## 💡 Inspiration
 
-- **GitHub Actions Workflows**
-  - PR title validation
-  - Automated version bumping based on conventional commits
-  - Automated PR creation for version bumps
-  - GitHub Container Registry (GHCR) cleanup
-- **Windsurf Rules Integration**
-  - Documentation standards
-  - Git workflow guidelines
-  - Project structure templates
-- **Development Tools**
-  - Local workflow testing with [act CLI](https://github.com/nektos/act)
-  - Semantic versioning enforcement
-  - Conventional commit standards
-- **Configuration Files**
-  - `.gitignore` - Comprehensive ignore patterns for Node.js projects
-  - `.markdownlint.json` - Markdown linting configuration
+This guide was inspired by Joe Njenga's Medium articles on using Ollama with Claude Code:
+
+- [I Tried New Claude Code Ollama Workflow (It's Wild & Free)](https://medium.com/@joe.njenga/i-tried-new-claude-code-ollama-workflow-its-wild-free-cb7a12b733b5) - The original guide that inspired this repository
+- [I Tested (New) Ollama Launch For Claude Code, Codex, OpenCode (No More Configs)](https://medium.com/ai-software-engineer/i-tested-new-ollama-launch-for-claude-code-codex-opencode-more-bfae2af3c3db) - The updated guide using the simplified `ollama launch` command
+
+The `ollama launch` command eliminates manual configuration and makes setup incredibly simple.
+
+## 🖥️ Development Environment
+
+This guide was developed and tested on:
+- **Device**: 2021 14" MacBook Pro
+- **Processor**: Apple M1 Max
+- **RAM**: 64 GB
+- **OS**: macOS Tahoe 26.2
 
 ## 🛠️ Prerequisites
 
-- Node.js
-- npm
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [act CLI tool](https://github.com/nektos/act) (for local GitHub Actions and Workflow testing in isolated Docker containers)
+Before you begin, you'll need:
 
-## 🚦 Getting Started
+- macOS (this guide was verified on Tahoe 26.2, but other versions should work)
+- Basic familiarity with terminal/command line
 
-1. **Clone the repository**
+## 🚦 Quick Start
 
-   ```bash
-   git clone https://github.com/TheRobBrennan/starting-point.git
-   cd starting-point
-   ```
+The new `ollama launch` command (v0.15+) handles all configuration automatically. No more manual environment variable setup!
 
-## 🧪 Testing Workflows
+### Step 1: Update Ollama
 
-This project includes GitHub Actions workflows that can be tested locally using the [act CLI tool](https://github.com/nektos/act).
+Ensure you have Ollama v0.15 or later:
 
-### Available Test Commands
+```bash
+# Check your version
+ollama --version
+```
 
-- `npm test` - Run all tests and GitHub workflows
-- `npm run test:workflows` - Only test GitHub workflows
+If you need to update, download the latest from [ollama.com/download](https://ollama.com/download).
 
-## 🤖 GitHub Actions
+### Step 2: Install Claude Code
 
-This repository includes the following GitHub Actions workflows:
+For macOS, Linux, or WSL:
 
-- **PR Title Check**: Validates PR titles against conventional commit messages
-- **Version Bump**: Handles version bumping and changelog generation on merge to main
-- **GHCR Cleanup**: Automatically cleans up old GitHub Container Registry images
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
 
-## 📋 Using This Template
+After installation, restart your terminal and verify:
 
-### Getting Started with Your New Project
+```bash
+claude --version
+```
 
-1. **Create a new repository from this template**
-   - Click the "Use this template" button on GitHub, or
-   - Clone this repository and push it to a new repository
+### Step 3: Pull a Coding Model
 
-2. **Customize the template for your project**
-   - Update the `package.json` with your project details
-   - Modify the README.md to describe your project
-   - Review and customize `.gitignore` for your specific project needs
-   - Adjust `.markdownlint.json` if you need different markdown linting rules
-   - Adjust the Windsurf rules in `.windsurf/rules/` to match your project's needs
+For this guide, we're using a local model that runs entirely on your MacBook Pro:
 
-3. **Start developing**
-   - Add your project files
-   - Use the pre-configured GitHub workflows for PR validation and versioning
+```bash
+ollama pull qwen2.5-coder:7b
+```
 
-### Customizing GitHub Workflows
+**About this model:**
+- Trained specifically for coding tasks
+- Handles typical coding tasks like building REST APIs, writing functions, and understanding code structure
+- When modifying existing code, it references what's already there and makes integrated changes
+- Size: ~4.7GB download
 
-The template includes three main workflows:
+**Other local model options:**
+- `qwen3-coder` (~18GB) - Larger, more capable coding model
+- `starcoder2:3b` (~1.7GB) - Compact coding model
 
-1. **PR Title Check** (`.github/workflows/pr-title-check.yml`)
-   - Validates that PR titles follow conventional commit format
-   - Customize validation rules if needed
+**Note:** Cloud models are also available (e.g., `glm-4.7:cloud`) but require an [Ollama Cloud account](https://ollama.com/cloud).
 
-2. **Version Bump** (`.github/workflows/version-bump.yml`)
-   - Automatically creates version bump PRs after merges to main
-   - Adjusts version based on commit type (feat, fix, etc.)
-   - Customize the version bump behavior if needed
+#### Experimenting with Larger Models
 
-3. **GHCR Cleanup** (`.github/workflows/ghcr-cleanup.yml`)
-   - Automatically cleans up old GitHub Container Registry images
-   - Configurable to keep a certain number of recent versions
-   - Can be run manually or on a schedule
+For more complex tasks, you might want to try `gpt-oss:20b`, a larger general-purpose model:
+
+```bash
+ollama pull gpt-oss:20b
+```
+
+Run it with:
+
+```bash
+ollama launch claude --model gpt-oss:20b
+```
+
+**About this model:**
+- Handles a wider range of tasks beyond just coding — documentation generation, code review, and architectural planning
+- Size: ~12GB download
+- **Trade-off:** Uses more RAM and processes tokens more slowly than smaller models
+- **Performance:** Unknown how well it will perform on this hardware setup - experimentation needed
+
+### Step 4: Configure Context Length (Local Models Only)
+
+**Important:** For local models, increase the context length from the default 4,096 to 64,000 tokens.
+
+Open Ollama's settings and update the context length to at least 64,000 tokens. This is required for multi-file operations and tool calls.
+
+**Note:** Cloud models automatically run at full context length, so you can skip this step if using cloud models.
+
+### Step 5: Launch Claude Code
+
+Simply run:
+
+```bash
+ollama launch claude
+```
+
+That's it! The `launch` command will:
+- Set up all environment variables automatically
+- Present a model selection menu
+- Launch Claude Code with your chosen model
+
+You can also specify the model directly:
+
+```bash
+ollama launch claude --model qwen2.5-coder:7b
+```
+
+Claude Code will start and connect to your local Ollama instance, running the `qwen2.5-coder:7b` model entirely on your MacBook Pro.
+
+## 📚 Additional Documentation
+
+For more detailed information about this project:
+
+- [GitHub Actions Setup](docs/github-setup.md) - Configure workflows and permissions
+- [Testing Workflows](docs/testing-workflows.md) - Test GitHub Actions locally with act
+- [Container Management](docs/act-container-management.md) - Docker container cleanup
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to this project
 
 ## 🤝 Contributing
 
-We welcome contributions! All commits must be GPG signed and follow the
-[conventional commit](https://www.conventionalcommits.org/) format.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
+We welcome contributions! All commits must be GPG signed and follow the [conventional commit](https://www.conventionalcommits.org/) format. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
 
 ## 🙏 Acknowledgments
 
-- [act CLI tool](https://github.com/nektos/act) for local GitHub Actions testing
+- [Joe Njenga](https://medium.com/@joe.njenga) for the original Medium article
+- [Ollama](https://ollama.ai/) for making local LLMs accessible
+- [Anthropic](https://www.anthropic.com/) for Claude Code

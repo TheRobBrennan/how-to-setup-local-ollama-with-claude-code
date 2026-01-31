@@ -1,14 +1,14 @@
 {
-  "name": "starting-point",
-  "version": "0.2.1",
-  "description": "A clean starting point for new projects with GitHub Actions workflows and Windsurf rules",
-  "homepage": "https://github.com/TheRobBrennan/starting-point#readme",
+  "name": "how-to-setup-local-ollama-with-claude-code",
+  "version": "0.0.0",
+  "description": "🚀 Complete guide to setting up Claude Code with free local Ollama on macOS - no API keys, no billing",
+  "homepage": "https://github.com/TheRobBrennan/how-to-setup-local-ollama-with-claude-code#readme",
   "bugs": {
-    "url": "https://github.com/TheRobBrennan/starting-point/issues"
+    "url": "https://github.com/TheRobBrennan/how-to-setup-local-ollama-with-claude-code/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheRobBrennan/starting-point.git"
+    "url": "git+https://github.com/TheRobBrennan/how-to-setup-local-ollama-with-claude-code.git"
   },
   "author": "Rob Brennan <rob@sploosh.ai>",
   "scripts": {
