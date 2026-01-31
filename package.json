@@ -1,6 +1,6 @@
 {
   "name": "starting-point",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A clean starting point for new projects with GitHub Actions workflows and Windsurf rules",
   "homepage": "https://github.com/TheRobBrennan/starting-point#readme",
   "bugs": {
