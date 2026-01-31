@@ -53,11 +53,13 @@ When referencing files in the PR description:
 
 ### Forbidden Content
 PR descriptions must NOT include:
-- Testing sections or checkboxes (`## Testing`, `[ ]`, `[x]`)
+- Testing sections or checkboxes outside of the designated `## Testing` section
 - Local testing output or act command results
 - Workflow testing references
 - Debug output or logs
 - Any content related to local development testing
+
+**Note**: Checkboxes are allowed ONLY in the `## Testing` section as provided in the PR template. Do not add checkboxes to other sections like "Changes Made" or descriptions.
 
 ### Example PR Description
 ```markdown

@@ -92,11 +92,11 @@ jobs:
           PR_BODY='${{ github.event.pull_request.body }}'
           echo "Checking PR description format..."
           
-          # Check for forbidden content in PR description
-          if echo "$PR_BODY" | grep -q -E "(Testing:|## Testing|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test)"; then
-            echo "❌ PR description contains testing content or checkboxes"
+          # Check for forbidden content in PR description (allow checkboxes only in Testing section)
+          if echo "$PR_BODY" | grep -v -A 10 "## Testing" | grep -q -E "(Testing:|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test)"; then
+            echo "❌ PR description contains testing content or checkboxes outside of Testing section"
             echo "PR descriptions should not include:"
-            echo "- Testing sections or checkboxes"
+            echo "- Testing sections or checkboxes outside of ## Testing section"
             echo "- Local testing output"
             echo "- Workflow testing references"
             echo "- Act command output"
