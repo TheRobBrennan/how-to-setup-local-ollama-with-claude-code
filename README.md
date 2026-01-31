@@ -214,13 +214,14 @@ MODEL=gpt-oss npm start
 - `npm test` - Run workflow tests
 - `npm run test:workflows` - Test GitHub Actions locally with act
 
-## �📚 Additional Documentation
+## 📚 Additional Documentation
 
 For more detailed information about this project:
 
 - [GitHub Actions Setup](docs/github-setup.md) - Configure workflows and permissions
 - [Testing Workflows](docs/testing-workflows.md) - Test GitHub Actions locally with act
 - [Container Management](docs/act-container-management.md) - Docker container cleanup
+- [Claude Co-Author Management](docs/claude-coauthor-management.md) - Control "co-authored by Claude" attribution
 - [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to this project
 
 ## 🤝 Contributing
