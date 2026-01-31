@@ -13,6 +13,11 @@
   "author": "Rob Brennan <rob@sploosh.ai>",
   "scripts": {
     "test": "npm run test:workflows",
-    "test:workflows": "chmod +x .github/test-workflows.sh && .github/test-workflows.sh"
+    "test:workflows": "chmod +x .github/test-workflows.sh && .github/test-workflows.sh",
+    "check:qwen": "ollama list | grep -q 'qwen2.5-coder:7b' || ollama pull qwen2.5-coder:7b",
+    "start:qwen": "npm run check:qwen && ollama launch claude --model qwen2.5-coder:7b",
+    "check:gpt-oss": "ollama list | grep -q 'gpt-oss:20b' || ollama pull gpt-oss:20b",
+    "start:gpt-oss": "npm run check:gpt-oss && ollama launch claude --model gpt-oss:20b",
+    "start": "MODEL=${MODEL:-qwen} && npm run start:$MODEL"
   }
 }
