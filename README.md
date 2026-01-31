@@ -4,7 +4,12 @@ Complete guide to setting up Claude Code with free local Ollama on macOS - no AP
 
 ## 💡 Inspiration
 
-This guide was inspired by [Joe Njenga's Medium article](https://medium.com/ai-software-engineer/i-tested-new-ollama-launch-for-claude-code-codex-opencode-more-bfae2af3c3db) on using Ollama's new `launch` command with Claude Code. The `ollama launch` command eliminates manual configuration and makes setup incredibly simple.
+This guide was inspired by Joe Njenga's Medium articles on using Ollama with Claude Code:
+
+- [I Tried New Claude Code Ollama Workflow (It's Wild & Free)](https://medium.com/@joe.njenga/i-tried-new-claude-code-ollama-workflow-its-wild-free-cb7a12b733b5) - The original guide that inspired this repository
+- [I Tested (New) Ollama Launch For Claude Code, Codex, OpenCode (No More Configs)](https://medium.com/ai-software-engineer/i-tested-new-ollama-launch-for-claude-code-codex-opencode-more-bfae2af3c3db) - The updated guide using the simplified `ollama launch` command
+
+The `ollama launch` command eliminates manual configuration and makes setup incredibly simple.
 
 ## 🖥️ Development Environment
 
