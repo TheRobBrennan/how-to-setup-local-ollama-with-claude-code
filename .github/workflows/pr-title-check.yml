@@ -85,6 +85,43 @@ jobs:
       #       sleep 10
       #     done
 
+      - name: Check PR Description Format
+        if: success()
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          echo "Checking PR description format..."
+          
+          # Check for forbidden content in PR description
+          if [[ "$PR_BODY" =~ (Testing:|## Testing|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test) ]]; then
+            echo "❌ PR description contains testing content or checkboxes"
+            echo "PR descriptions should not include:"
+            echo "- Testing sections or checkboxes"
+            echo "- Local testing output"
+            echo "- Workflow testing references"
+            echo "- Act command output"
+            exit 1
+          fi
+          
+          # Check for proper file link format (relative paths, not full URLs)
+          if [[ "$PR_BODY" =~ \[.*\]\(https://github\.com/.*blob/.*\) ]]; then
+            echo "❌ PR description contains full GitHub URLs instead of relative file paths"
+            echo "Use relative paths like: [file.md](file.md) or [file.md](path/to/file.md)"
+            exit 1
+          fi
+          
+          # Check for required sections
+          if [[ ! "$PR_BODY" =~ "# Description" ]]; then
+            echo "❌ PR description must include a '# Description' section"
+            exit 1
+          fi
+          
+          if [[ ! "$PR_BODY" =~ "version:" ]]; then
+            echo "❌ PR description must include semantic versioning (version: feat, fix, docs, etc.)"
+            exit 1
+          fi
+          
+          echo "✅ PR description format is valid"
+
       - name: Check Breaking Change Format
         if: success()
         run: |
