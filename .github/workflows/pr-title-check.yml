@@ -88,39 +88,47 @@ jobs:
       - name: Check PR Description Format
         if: success()
         run: |
-          # Store PR body in a temp file to avoid shell interpretation issues
-          PR_BODY='${{ github.event.pull_request.body }}'
+          # Create temp file with PR body to avoid shell interpretation issues
+          cat > pr_body.txt << 'EOF'
+          ${{ github.event.pull_request.body }}
+          EOF
+          
           echo "Checking PR description format..."
           
           # Check for forbidden content in PR description (allow checkboxes only in Testing section)
-          if echo "$PR_BODY" | grep -v -A 10 "## Testing" | grep -q -E "(Testing:|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test)"; then
+          if grep -v -A 10 "## Testing" pr_body.txt | grep -q -E "(Testing:|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test)"; then
             echo "❌ PR description contains testing content or checkboxes outside of Testing section"
             echo "PR descriptions should not include:"
             echo "- Testing sections or checkboxes outside of ## Testing section"
             echo "- Local testing output"
             echo "- Workflow testing references"
             echo "- Act command output"
+            rm -f pr_body.txt
             exit 1
           fi
           
           # Check for proper file link format (relative paths, not full URLs)
-          if echo "$PR_BODY" | grep -q -E "\[.*\]\(https://github\.com/.*blob/.*\)"; then
+          if grep -q -E "\[.*\]\(https://github\.com/.*blob/.*\)" pr_body.txt; then
             echo "❌ PR description contains full GitHub URLs instead of relative file paths"
             echo "Use relative paths like: [file.md](file.md) or [file.md](path/to/file.md)"
+            rm -f pr_body.txt
             exit 1
           fi
           
           # Check for required sections
-          if ! echo "$PR_BODY" | grep -q "# Description"; then
+          if ! grep -q "# Description" pr_body.txt; then
             echo "❌ PR description must include a '# Description' section"
+            rm -f pr_body.txt
             exit 1
           fi
           
-          if ! echo "$PR_BODY" | grep -q "version:"; then
+          if ! grep -q "version:" pr_body.txt; then
             echo "❌ PR description must include semantic versioning (version: feat, fix, docs, etc.)"
+            rm -f pr_body.txt
             exit 1
           fi
           
+          rm -f pr_body.txt
           echo "✅ PR description format is valid"
 
       - name: Check Breaking Change Format
