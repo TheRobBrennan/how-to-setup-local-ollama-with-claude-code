@@ -57,23 +57,24 @@ claude --version
 
 ### Step 3: Pull a Coding Model
 
-Choose a model based on your setup:
+For this guide, we're using a local model that runs entirely on your MacBook Pro:
 
-**For local models** (requires ~23GB VRAM with 64K context):
 ```bash
-ollama pull glm-4.7-flash
+ollama pull qwen2.5-coder:7b
 ```
 
-**For cloud models** (no hardware requirements, full context length):
-```bash
-ollama pull glm-4.7:cloud
-```
+**About this model:**
+- Trained specifically for coding tasks
+- Handles typical coding tasks like building REST APIs, writing functions, and understanding code structure
+- When modifying existing code, it references what's already there and makes integrated changes
+- Size: ~4.7GB download
 
-**Other recommended models:**
-- `qwen3-coder` - Local coding specialist
-- `gpt-oss:20b` - Larger local model
-- `minimax-m2.1:cloud` - Cloud alternative
-- `qwen3-coder:480b-cloud` - Largest cloud coding model
+**Other local model options:**
+- `qwen3-coder` (~18GB) - Larger, more capable coding model
+- `gpt-oss:20b` (~12GB) - Larger general-purpose model
+- `starcoder2:3b` (~1.7GB) - Compact coding model
+
+**Note:** Cloud models are also available (e.g., `glm-4.7:cloud`) but require an [Ollama Cloud account](https://ollama.com/cloud).
 
 ### Step 4: Configure Context Length (Local Models Only)
 
@@ -96,13 +97,13 @@ That's it! The `launch` command will:
 - Present a model selection menu
 - Launch Claude Code with your chosen model
 
-You can also specify a model directly:
+You can also specify the model directly:
 
 ```bash
-ollama launch claude --model glm-4.7:cloud
+ollama launch claude --model qwen2.5-coder:7b
 ```
 
-**For cloud models:** You'll need an [Ollama Cloud account](https://ollama.com/cloud) (starts at $20/month).
+Claude Code will start and connect to your local Ollama instance, running the `qwen2.5-coder:7b` model entirely on your MacBook Pro.
 
 ## 📚 Additional Documentation
 
