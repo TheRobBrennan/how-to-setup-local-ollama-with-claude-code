@@ -1,6 +1,6 @@
 # ACT Testing and Container Management
 
-This document explains how the ACT testing framework is used in the starting-point project and how we manage Docker containers created during testing.
+This document explains how the ACT testing framework is used in this project and how we manage Docker containers created during testing.
 
 ## Overview
 
