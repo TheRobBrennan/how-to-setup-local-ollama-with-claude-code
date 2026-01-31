@@ -71,10 +71,29 @@ ollama pull qwen2.5-coder:7b
 
 **Other local model options:**
 - `qwen3-coder` (~18GB) - Larger, more capable coding model
-- `gpt-oss:20b` (~12GB) - Larger general-purpose model
 - `starcoder2:3b` (~1.7GB) - Compact coding model
 
 **Note:** Cloud models are also available (e.g., `glm-4.7:cloud`) but require an [Ollama Cloud account](https://ollama.com/cloud).
+
+#### Experimenting with Larger Models
+
+For more complex tasks, you might want to try `gpt-oss:20b`, a larger general-purpose model:
+
+```bash
+ollama pull gpt-oss:20b
+```
+
+Run it with:
+
+```bash
+ollama launch claude --model gpt-oss:20b
+```
+
+**About this model:**
+- Handles a wider range of tasks beyond just coding — documentation generation, code review, and architectural planning
+- Size: ~12GB download
+- **Trade-off:** Uses more RAM and processes tokens more slowly than smaller models
+- **Performance:** Unknown how well it will perform on this hardware setup - experimentation needed
 
 ### Step 4: Configure Context Length (Local Models Only)
 
