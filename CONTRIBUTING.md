@@ -32,6 +32,49 @@ All commits pushed to this repository must be GPG signed. Use `git commit -S` if
 4. **Open a Pull Request**
    - Fill out the provided PR template.
    - Ensure your commits are signed and all checks pass.
+   - Follow PR description guidelines below.
+
+## Pull Request Description Guidelines
+
+### Required Sections
+All PR descriptions must include:
+- `# Description` - Brief explanation of changes
+- `version: <type>` - Semantic versioning type (feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert)
+
+### File References
+When referencing files in the PR description:
+- **Use relative paths**: `[file.md](path/to/file.md)` or `[README.md](README.md)`
+- **Never use full GitHub URLs**: Avoid `[file.md](https://github.com/user/repo/blob/branch/file.md)`
+- **Example**:
+  ```markdown
+  - Updated [`README.md`](README.md) with new instructions
+  - Added [`docs/guide.md`](docs/guide.md) with comprehensive documentation
+  ```
+
+### Forbidden Content
+PR descriptions must NOT include:
+- Testing sections or checkboxes (`## Testing`, `[ ]`, `[x]`)
+- Local testing output or act command results
+- Workflow testing references
+- Debug output or logs
+- Any content related to local development testing
+
+### Example PR Description
+```markdown
+# Description
+
+Add comprehensive documentation for new feature.
+
+## Type of Change
+
+version: docs     # Documentation changes
+
+## Changes Made
+
+- Updated [`README.md`](README.md) with setup instructions
+- Created [`docs/guide.md`](docs/guide.md) with detailed examples
+- Fixed formatting in existing documentation
+```
 
 ## Repository Configuration
 
