@@ -183,7 +183,38 @@ ollama launch claude --model qwen2.5-coder:7b
 - This is an upsell mechanism that can lead to unexpected billing
 - If you accidentally switch to cloud, use the logout steps above immediately
 
-## 📚 Additional Documentation
+## � Available Scripts
+
+This project includes npm scripts to simplify working with Ollama models:
+
+### Quick Start Scripts
+
+**Start with qwen2.5-coder:7b (default):**
+```bash
+npm start
+```
+
+**Start with gpt-oss:20b:**
+```bash
+MODEL=gpt-oss npm start
+```
+
+### Model-Specific Scripts
+
+**qwen2.5-coder:7b:**
+- `npm run check:qwen` - Check if model exists, download if missing
+- `npm run start:qwen` - Check for model and start Claude Code
+
+**gpt-oss:20b:**
+- `npm run check:gpt-oss` - Check if model exists, download if missing
+- `npm run start:gpt-oss` - Check for model and start Claude Code
+
+### Testing
+
+- `npm test` - Run workflow tests
+- `npm run test:workflows` - Test GitHub Actions locally with act
+
+## �📚 Additional Documentation
 
 For more detailed information about this project:
 
