@@ -88,11 +88,12 @@ jobs:
       - name: Check PR Description Format
         if: success()
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
+          # Store PR body in a temp file to avoid shell interpretation issues
+          PR_BODY='${{ github.event.pull_request.body }}'
           echo "Checking PR description format..."
           
           # Check for forbidden content in PR description
-          if [[ "$PR_BODY" =~ (Testing:|## Testing|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test) ]]; then
+          if echo "$PR_BODY" | grep -q -E "(Testing:|## Testing|checkbox|\[ \]|\[x\]|act|workflow.*test|local.*test)"; then
             echo "❌ PR description contains testing content or checkboxes"
             echo "PR descriptions should not include:"
             echo "- Testing sections or checkboxes"
@@ -103,19 +104,19 @@ jobs:
           fi
           
           # Check for proper file link format (relative paths, not full URLs)
-          if [[ "$PR_BODY" =~ \[.*\]\(https://github\.com/.*blob/.*\) ]]; then
+          if echo "$PR_BODY" | grep -q -E "\[.*\]\(https://github\.com/.*blob/.*\)"; then
             echo "❌ PR description contains full GitHub URLs instead of relative file paths"
             echo "Use relative paths like: [file.md](file.md) or [file.md](path/to/file.md)"
             exit 1
           fi
           
           # Check for required sections
-          if [[ ! "$PR_BODY" =~ "# Description" ]]; then
+          if ! echo "$PR_BODY" | grep -q "# Description"; then
             echo "❌ PR description must include a '# Description' section"
             exit 1
           fi
           
-          if [[ ! "$PR_BODY" =~ "version:" ]]; then
+          if ! echo "$PR_BODY" | grep -q "version:"; then
             echo "❌ PR description must include semantic versioning (version: feat, fix, docs, etc.)"
             exit 1
           fi
