@@ -142,9 +142,9 @@ Check the [Claude Code documentation](https://docs.anthropic.com/claude/docs/cla
 
 To confirm you're using local models (no cloud billing):
 
-1. **Check the model name**: Look for `qwen2.5-coder:7b` or other local model names in Claude Code's interface
+1. **Check the model name**: Look for your local model name (e.g., `qwen2.5-coder:7b` or `gpt-oss:20b`) in Claude Code's interface
 2. **No auth conflicts**: You should NOT see authentication conflict warnings
-3. **Status check**: Run `claude /status` - it should show your local model, not `claude-sonnet` or similar cloud models
+3. **Status check**: Run `claude /status` – it will report the API‑side default model (`claude-sonnet-4-5-…`) but the model actually used locally is the one you specified. The local model runs without billing.
 
 **Correct local setup shows:**
 - Model: `qwen2.5-coder:7b` (or other local model)
