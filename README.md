@@ -23,7 +23,7 @@ This guide was developed and tested on:
 
 Before you begin, you'll need:
 
-- macOS (Tahoe 26.2 or compatible version)
+- macOS (this guide was verified on Tahoe 26.2, but other versions should work)
 - Basic familiarity with terminal/command line
 
 ## 🚦 Quick Start
