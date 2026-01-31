@@ -1,0 +1,12 @@
+{
+    "pull_request": {
+        "title": "feat!: redesign authentication system",
+        "body": "BREAKING CHANGE: Complete overhaul of auth system",
+        "number": 1,
+        "html_url": "https://github.com/TheRobBrennan/starting-point/pull/1"
+    },
+    "repository": {
+        "full_name": "TheRobBrennan/starting-point",
+        "html_url": "https://github.com/TheRobBrennan/starting-point"
+    }
+}

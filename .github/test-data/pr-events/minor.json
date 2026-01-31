@@ -1,0 +1,12 @@
+{
+    "pull_request": {
+        "title": "feat: add new feature",
+        "body": "Adding new feature to the project",
+        "number": 2,
+        "html_url": "https://github.com/TheRobBrennan/starting-point/pull/2"
+    },
+    "repository": {
+        "full_name": "TheRobBrennan/starting-point",
+        "html_url": "https://github.com/TheRobBrennan/starting-point"
+    }
+}

@@ -1,0 +1,227 @@
+name: GHCR Cleanup
+
+on:
+  schedule:
+    - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no deletions)'
+        type: boolean
+        default: true
+      days_old:
+        description: 'Delete versions older than X days'
+        type: number
+        default: 1
+      keep_versions:
+        description: 'Always keep this many recent versions'
+        type: number
+        default: 2
+
+jobs:
+  cleanup-ghcr:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      
+    steps:
+      - name: Clean GHCR Container Images
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          DRY_RUN: ${{ inputs.dry_run || 'true' }}
+          DAYS_OLD: ${{ inputs.days_old || 1 }}
+          KEEP_VERSIONS: ${{ inputs.keep_versions || 2 }}
+        run: |
+          echo "🧹 GHCR Container Image Cleanup"
+          echo "Repository: $ORG/$REPO"
+          echo "Settings: DRY_RUN=$DRY_RUN, DAYS_OLD=$DAYS_OLD days, KEEP_VERSIONS=$KEEP_VERSIONS"
+          echo "----------------------------------------"
+          
+          # Calculate cutoff date
+          CUTOFF_TIMESTAMP=$(date -d "${DAYS_OLD} days ago" --iso-8601)
+          echo "Cutoff date: $CUTOFF_TIMESTAMP"
+          echo ""
+          
+          # Dynamically discover container packages for this repository
+          echo "🔍 Discovering container packages for repository $ORG/$REPO..."
+          
+          # Test for known package patterns that could exist for this repository
+          CANDIDATE_PACKAGES=(
+            "$REPO"  # Same as repository name
+            "payloadcms"  # Common package name pattern
+            "$(echo $REPO | tr '[:upper:]' '[:lower:]')"  # Lowercase version
+            "$(echo $REPO | sed 's/-web-[0-9]*$//')"  # Remove version suffix if present
+          )
+          
+          # Remove duplicates and empty entries
+          UNIQUE_CANDIDATES=($(printf '%s\n' "${CANDIDATE_PACKAGES[@]}" | sort -u | grep -v '^$'))
+          
+          echo "  🔍 Testing candidate packages: ${UNIQUE_CANDIDATES[*]}"
+          
+          PACKAGES=()
+          for CANDIDATE in "${UNIQUE_CANDIDATES[@]}"; do
+            echo "  🔍 Testing package: $CANDIDATE"
+            
+            # Try org endpoint first
+            ORG_TEST=$(gh api "orgs/$ORG/packages/container/$CANDIDATE/versions" --paginate 2>/dev/null || echo "")
+            if [ -n "$ORG_TEST" ] && echo "$ORG_TEST" | jq -e 'type == "array" and length > 0' >/dev/null 2>&1; then
+              echo "    ✅ Found $CANDIDATE via org endpoint"
+              PACKAGES+=("$CANDIDATE")
+              continue
+            fi
+            
+            # Try user endpoint if org failed
+            USER_TEST=$(gh api "user/packages/container/$CANDIDATE/versions" --paginate 2>/dev/null || echo "")
+            if [ -n "$USER_TEST" ] && echo "$USER_TEST" | jq -e 'type == "array" and length > 0' >/dev/null 2>&1; then
+              echo "    ✅ Found $CANDIDATE via user endpoint"
+              PACKAGES+=("$CANDIDATE")
+              continue
+            fi
+            
+            echo "    ❌ Package $CANDIDATE not found"
+          done
+          
+          if [ ${#PACKAGES[@]} -eq 0 ]; then
+            echo "  ⚠️  No container packages found for this repository"
+            echo "🎯 Final Summary: No packages to process"
+            exit 0
+          fi
+          
+          echo "  📋 Found ${#PACKAGES[@]} package(s):"
+          for pkg in "${PACKAGES[@]}"; do
+            echo "    - $pkg"
+          done
+          echo ""
+          
+          TOTAL_DELETED=0
+          TOTAL_KEPT=0
+          
+          for PACKAGE in "${PACKAGES[@]}"; do
+            echo "📦 Processing package: $PACKAGE"
+            
+            # Get package versions - try org endpoint first, then user endpoint
+            echo "  🔍 Fetching package versions..."
+            VERSIONS_JSON=""
+            
+            # Try organization endpoint first
+            echo "  🔍 Trying org endpoint for $PACKAGE..."
+            ORG_RESPONSE=$(gh api "orgs/$ORG/packages/container/$PACKAGE/versions" --paginate 2>/dev/null || echo "")
+            if [ -n "$ORG_RESPONSE" ] && echo "$ORG_RESPONSE" | jq empty 2>/dev/null && [ "$ORG_RESPONSE" != "[]" ]; then
+              VERSIONS_JSON="$ORG_RESPONSE"
+              echo "  ✅ Found package via org endpoint"
+            fi
+            
+            # Try user endpoint if org failed
+            if [ -z "$VERSIONS_JSON" ]; then
+              echo "  🔍 Trying user endpoint for $PACKAGE..."
+              USER_RESPONSE=$(gh api "user/packages/container/$PACKAGE/versions" --paginate 2>/dev/null || echo "")
+              if [ -n "$USER_RESPONSE" ] && echo "$USER_RESPONSE" | jq empty 2>/dev/null && [ "$USER_RESPONSE" != "[]" ]; then
+                VERSIONS_JSON="$USER_RESPONSE"
+                echo "  ✅ Found package via user endpoint"
+              fi
+            fi
+            
+            # Check if we found any versions
+            if [ -z "$VERSIONS_JSON" ] || [ "$VERSIONS_JSON" = "[]" ]; then
+              echo "  ⚠️  Package '$PACKAGE' not found in org or user scope"
+              continue
+            fi
+            
+            # Count total versions
+            VERSION_COUNT=$(echo "$VERSIONS_JSON" | jq 'length' 2>/dev/null || echo "0")
+            echo "  💾 Found $VERSION_COUNT versions"
+            
+            if [ "$VERSION_COUNT" -eq 0 ]; then
+              echo "  ℹ️  No versions to process"
+              continue
+            fi
+            
+            # Sort versions by creation date (newest first) and process
+            echo "  🔍 Processing versions..."
+            echo "$VERSIONS_JSON" | jq -r '.[] | [.id, .created_at, (.metadata.container.tags // [] | if length > 0 then join(",") else "<untagged>" end), .updated_at] | @csv' 2>/dev/null | \
+            sort -t, -k2 -r | \
+            {
+              KEPT_COUNT=0
+              PACKAGE_DELETED=0
+              PROCESSED_COUNT=0
+              
+              while IFS=, read -r VERSION_ID CREATED_AT TAGS UPDATED_AT; do
+                # Remove CSV quotes
+                VERSION_ID=$(echo "$VERSION_ID" | tr -d '"')
+                CREATED_AT=$(echo "$CREATED_AT" | tr -d '"')
+                TAGS=$(echo "$TAGS" | tr -d '"')
+                UPDATED_AT=$(echo "$UPDATED_AT" | tr -d '"')
+                
+                PROCESSED_COUNT=$((PROCESSED_COUNT + 1))
+                
+                # Always keep the most recent versions regardless of age
+                if [ $KEPT_COUNT -lt $KEEP_VERSIONS ]; then
+                  echo "  ✅ Keeping version $VERSION_ID (tags: $TAGS) - protected (${KEPT_COUNT}/${KEEP_VERSIONS})"
+                  KEPT_COUNT=$((KEPT_COUNT + 1))
+                  continue
+                fi
+                
+                # Check if version is older than cutoff
+                CREATED_DATE=$(echo "$CREATED_AT" | cut -d'T' -f1)
+                CUTOFF_DATE=$(date -d "${DAYS_OLD} days ago" +%Y-%m-%d)
+                
+                if [[ "$CREATED_DATE" < "$CUTOFF_DATE" ]]; then
+                  echo "  🗑️  Candidate for deletion: $VERSION_ID (created: $CREATED_DATE, tags: $TAGS)"
+                  
+                  if [ "$DRY_RUN" = "false" ]; then
+                    echo "    🔥 Deleting version $VERSION_ID..."
+                    DELETE_SUCCESS=false
+                    
+                    # Try org endpoint first
+                    if gh api -X DELETE "orgs/$ORG/packages/container/$PACKAGE/versions/$VERSION_ID" >/dev/null 2>&1; then
+                      DELETE_SUCCESS=true
+                    elif gh api -X DELETE "user/packages/container/$PACKAGE/versions/$VERSION_ID" >/dev/null 2>&1; then
+                      DELETE_SUCCESS=true
+                    fi
+                    
+                    if [ "$DELETE_SUCCESS" = "true" ]; then
+                      echo "    ✅ Successfully deleted version $VERSION_ID"
+                      PACKAGE_DELETED=$((PACKAGE_DELETED + 1))
+                    else
+                      echo "    ❌ Failed to delete version $VERSION_ID"
+                    fi
+                  else
+                    echo "    💭 DRY RUN: Would delete version $VERSION_ID"
+                    PACKAGE_DELETED=$((PACKAGE_DELETED + 1))
+                  fi
+                else
+                  echo "  ✅ Keeping version $VERSION_ID (created: $CREATED_DATE) - within retention period"
+                  KEPT_COUNT=$((KEPT_COUNT + 1))
+                fi
+              done
+              
+              echo "  📊 Package summary: $PROCESSED_COUNT total, $KEPT_COUNT kept, $PACKAGE_DELETED $([ "$DRY_RUN" = "true" ] && echo "would be deleted" || echo "deleted")"
+              
+              # Update totals (using temp files since we're in a subshell)
+              echo $((TOTAL_DELETED + PACKAGE_DELETED)) > /tmp/total_deleted
+              echo $((TOTAL_KEPT + KEPT_COUNT)) > /tmp/total_kept
+            }
+            
+            # Read totals back from temp files
+            TOTAL_DELETED=$(cat /tmp/total_deleted 2>/dev/null || echo $TOTAL_DELETED)
+            TOTAL_KEPT=$(cat /tmp/total_kept 2>/dev/null || echo $TOTAL_KEPT)
+            
+            echo ""
+          done
+          
+          # Cleanup temp files
+          rm -f /tmp/total_deleted /tmp/total_kept
+          
+          echo "🎯 Final Summary:"
+          echo "  📊 Total versions processed: $((TOTAL_KEPT + TOTAL_DELETED))"
+          echo "  ✅ Total versions kept: $TOTAL_KEPT"
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "  🔍 DRY RUN: Would delete $TOTAL_DELETED versions"
+            echo ""
+            echo "💡 To actually delete these versions, re-run with dry_run=false"
+          else
+            echo "  🗑️  Total versions deleted: $TOTAL_DELETED"
+          fi

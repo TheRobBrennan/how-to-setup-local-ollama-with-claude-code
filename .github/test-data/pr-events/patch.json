@@ -1,0 +1,12 @@
+{
+    "pull_request": {
+        "title": "fix: correct bug in core functionality",
+        "body": "Fixed bug in core functionality",
+        "number": 3,
+        "html_url": "https://github.com/TheRobBrennan/starting-point/pull/3"
+    },
+    "repository": {
+        "full_name": "TheRobBrennan/starting-point",
+        "html_url": "https://github.com/TheRobBrennan/starting-point"
+    }
+}

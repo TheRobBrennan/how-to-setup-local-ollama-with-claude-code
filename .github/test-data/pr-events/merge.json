@@ -1,0 +1,12 @@
+{
+    "commits": [
+        {
+            "message": "Merge pull request #123 from TheRobBrennan:feature/new-feature\n\nfeat: add new feature\n\nAdds a new feature to the project"
+        }
+    ],
+    "pull_request": {
+        "title": "feat: add new feature",
+        "body": "Adds a new feature to the project",
+        "number": 123
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "pull_request": {
+        "title": "adding some feature without proper format",
+        "body": "This PR title doesn't follow semantic versioning",
+        "number": 1,
+        "html_url": "https://github.com/TheRobBrennan/starting-point/pull/1"
+    },
+    "repository": {
+        "full_name": "TheRobBrennan/starting-point",
+        "html_url": "https://github.com/TheRobBrennan/starting-point"
+    }
+}
