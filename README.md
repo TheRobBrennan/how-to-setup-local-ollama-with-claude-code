@@ -123,6 +123,119 @@ The `launch` command will:
 
 Claude Code will start and connect to your local Ollama instance, running the `qwen2.5-coder:7b` model entirely on your local machine.
 
+## 🌐 Free Web Search (Optional)
+
+Get real-time web search and URL fetching capabilities without any API keys or billing!
+
+### ⚠️ Important: Model Requirements
+
+**MCP tools only work with gpt-oss:20b model**
+- ✅ **gpt-oss:20b**: Can execute web search and fetch commands
+- ❌ **qwen2.5-coder:7b**: Recognizes tool calls but cannot execute them
+
+### Quick Setup
+
+```bash
+npm run setup:web-search
+```
+
+This interactive script will help you set up:
+- **Fetch MCP Server**: Fetch and read content from any URL
+- **Simple Python Search**: Search DuckDuckGo for current information
+- **Both**: Get the full web browsing experience
+
+### What You Can Do
+
+Once configured, Claude Code can:
+- Search the web for current information
+- Fetch and read documentation from URLs
+- Access real-time data beyond its training cutoff
+- Research topics and summarize findings
+
+### Example Usage
+
+```
+"Search the web for latest TypeScript 5.4 features"
+"Fetch content from https://docs.python.org/3/whatsnew/3.13.html"
+"What are the current best practices for React Server Components?"
+```
+
+### Pro Tips for Local Models
+
+**Use these phrases to trigger MCP tools:**
+- "Search the web for..." → Uses local DuckDuckGo search
+- "Fetch the JSON from..." → Uses local JSON fetcher
+- "Get the HTML content from..." → Uses local HTML fetcher
+- "Use the search tool to find..." → Explicit MCP usage
+
+**Available MCP Tools:**
+- `search_web` - DuckDuckGo web search
+- `fetch_json` - Fetch JSON from URLs
+- `fetch_html` - Fetch HTML from URLs  
+- `fetch_markdown` - Fetch and convert to Markdown
+- `fetch_txt` - Fetch plain text from URLs
+
+### 🏒 Example: fetch_json with NHL Scores
+
+Test your `fetch_json` tool with this comprehensive example:
+
+```bash
+# Ask Claude to:
+Fetch JSON from https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=2026-01-31 and for each unique entry in the games array (unique by id): convert startTimeUTC to Pacific Standard Time (UTC-8) → HH:MM AM/PM, create matchup string as awayTeam.abbrev vs homeTeam.abbrev, determine score/status (if gameState is OFF, FINAL, or gameOutcome.lastPeriodType is REG or gameOutcome.otPeriods > 0: use awayTeam.score – homeTeam.score; if gameState is LIVE or CRIT: show current score + (live); append (OT) if lastPeriodType == OT or otPeriods > 0; append (SO) if lastPeriodType == SO), sort rows by converted start time, and render a markdown table with columns: Time (PST), Match-up, Score / Status
+```
+
+**Expected Output:** A formatted table showing:
+- Game times converted to Pacific Standard Time (PST)
+- Games sorted chronologically from earliest to latest
+- Complete game information including teams, scores, and game status
+- All JSON data returned without truncation (94,733+ characters supported)
+
+**Sample Output:**
+```
+| Time (PST)   | Match-up     | Score / Status     |
+|--------------|--------------|--------------------|
+| 9:30 AM      | LAK vs PHI   | 3 – 2 (final) (OT) |
+| 10:00 AM     | COL vs DET   | 5 – 0 (final)      |
+| 12:30 PM     | NYR vs PIT   | 5 – 6 (final)      |
+| ...          | ...          | ...                |
+```
+
+This example verifies that:
+- ✅ The `fetch_json` tool returns complete JSON data (no 5000-char limit)
+- ✅ Large API responses are handled properly
+- ✅ Time zone conversions work correctly
+- ✅ Data sorting and formatting functions as expected
+
+**Avoid these phrases (trigger built-in tools):**
+- "Web search for..." → Tries to use Anthropic's WebSearch
+- "Can you search online..." → May trigger cloud tools
+
+### Learn More
+
+See the complete guide: [`docs/free-web-search-setup.md`](docs/free-web-search-setup.md)
+
+**Key Benefits:**
+- ✅ 100% Free - No API keys required
+- ✅ Privacy-focused - Runs on your local machine
+- ✅ Works with local Ollama models
+- ✅ No rate limits or subscriptions
+
+### Troubleshooting
+
+**MCP Server Shows "Failed" During Searches:**
+- This is normal during heavy usage - servers recover automatically
+- Caused by network timeouts or rate limiting from DuckDuckGo
+- Solution: Wait a moment between searches or run `npm run reset:mcp` to restart
+
+**Server Not Responding:**
+```bash
+# Check server status
+npm run mcp:list
+
+# Restart servers
+npm run reset:mcp && npm run setup:web-search
+```
+
 ## 🔌 IDE Integration
 
 Claude Code works standalone but also integrates with popular IDEs:
@@ -173,7 +286,7 @@ The status shows your local model (e.g., `gpt-oss:20b`) and localhost URL, confi
 - Active API key usage
 - Token usage showing actual token counts (being billed)
 
-### Troubleshooting
+### Cloud Model Troubleshooting
 If you see cloud models being used:
 ```bash
 # Clear Anthropic credentials
@@ -198,20 +311,53 @@ ollama launch claude --model qwen2.5-coder:7b
 - This is an upsell mechanism that can lead to unexpected billing
 - If you accidentally switch to cloud, use the logout steps above immediately
 
+## 🤖 Available Models
+
+**gpt-oss:20b (Recommended for MCP Tools)**
+- **Size**: 11GB | **Speed**: Slower | **RAM**: 16GB+ | **MCP Tools**: ✅ **Works**
+- **Best For**: Web search, fetching, general tasks
+
+**qwen2.5-coder:7b (Coding Focus)**
+- **Size**: 4.7GB | **Speed**: Fast | **RAM**: 8GB+ | **MCP Tools**: ⚠️ **Limited**
+- **Best For**: Coding, programming tasks
+
+### gpt-oss:20b (Recommended for MCP Tools)
+- **Size**: 11GB
+- **Speed**: Slower but more capable
+- **Quality**: Higher reasoning capability
+- **Specialization**: General purpose with better tool execution
+- **RAM**: 16GB+ recommended
+- **✅ MCP Tools**: Can execute web search and fetch commands
+
+### qwen2.5-coder:7b (Coding Focus)
+- **Size**: 4.7GB
+- **Speed**: Fast
+- **Quality**: Excellent for coding
+- **Specialization**: Optimized for programming tasks
+- **RAM**: 8GB+ recommended
+- **⚠️ MCP Tools**: Recognizes tool calls but cannot execute them
+
 ## � Available Scripts
 
 This project includes npm scripts to simplify working with Ollama models:
 
 ### Quick Start Scripts
 
-**Start with qwen2.5-coder:7b (default):**
+**Start with gpt-oss:20b (recommended for MCP tools):**
+```bash
+npm run start:gpt-oss
+```
+
+**Start with qwen2.5-coder:7b (coding focus):**
 ```bash
 npm start
 ```
 
-**Start with gpt-oss:20b:**
+**Choose model at runtime:**
 ```bash
-MODEL=gpt-oss npm start
+npm start                    # Uses qwen by default
+MODEL=qwen npm start         # Explicit qwen
+MODEL=gpt-oss npm start      # Uses gpt-oss
 ```
 
 ### Model-Specific Scripts
@@ -224,27 +370,27 @@ MODEL=gpt-oss npm start
 - `npm run check:gpt-oss` - Check if model exists, download if missing
 - `npm run start:gpt-oss` - Check for model and start Claude Code
 
+### Web Search Setup
+
+- `npm run setup:web-search` - Interactive setup for free web search (no API keys)
+- `npm run reset:mcp` - Remove all MCP servers for this project
+- `npm run mcp:list` - List all configured MCP servers
+- `npm run mcp:status` - Check MCP server status
+
 ### Testing
 
 - `npm test` - Run workflow tests
 - `npm run test:workflows` - Test GitHub Actions locally with act
 
-## 📚 Additional Documentation
-
-For more detailed information about this project:
-
-- [GitHub Actions Setup](docs/github-setup.md) - Configure workflows and permissions
-- [Testing Workflows](docs/testing-workflows.md) - Test GitHub Actions locally with act
-- [Container Management](docs/act-container-management.md) - Docker container cleanup
-- [Claude Co-Author Management](docs/claude-coauthor-management.md) - Control "co-authored by Claude" attribution
-- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to this project
-
-## 🤝 Contributing
-
-We welcome contributions! All commits must be GPG signed and follow the [conventional commit](https://www.conventionalcommits.org/) format. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
-
-## 🙏 Acknowledgments
-
 - [Joe Njenga](https://medium.com/@joe.njenga) for the original Medium article
 - [Ollama](https://ollama.ai/) for making local LLMs accessible
 - [Anthropic](https://www.anthropic.com/) for Claude Code
+
+## 📚 Additional Documentation
+
+- [`docs/free-web-search-setup.md`](docs/free-web-search-setup.md) - Complete guide for free web search
+- [`docs/web-search-quick-start.md`](docs/web-search-quick-start.md) - Quick reference guide
+- [`docs/act-container-management.md`](docs/act-container-management.md) - GitHub Actions testing
+- [`docs/claude-coauthor-management.md`](docs/claude-coauthor-management.md) - Claude coauthor setup
+- [`docs/github-setup.md`](docs/github-setup.md) - GitHub integration
+- [`docs/gpt-oss-20b-exploration.md`](docs/gpt-oss-20b-exploration.md) - GPT-OSS model exploration
