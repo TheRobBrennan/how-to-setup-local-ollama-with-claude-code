@@ -160,6 +160,58 @@ Once configured, Claude Code can:
 "What are the current best practices for React Server Components?"
 ```
 
+### 🔍 MCP Tool Verification Prompts
+
+Use these prompts to verify your MCP tools are working correctly:
+
+#### **Status Check**
+```
+/mcp
+```
+Should show both `fetch` and `simple-search` as connected.
+
+#### **Fetch Tool Tests**
+```
+Fetch the content from https://example.com
+```
+
+```
+Get the latest information from https://docs.python.org/3/whatsnew/3.13.html
+```
+
+```
+Read the content from https://github.com/ollama/ollama/blob/main/README.md
+```
+
+#### **Search Tool Tests**
+```
+Search the web for latest Python features
+```
+
+```
+Search for "Claude Code MCP server setup guide"
+```
+
+```
+What are the latest developments in AI coding assistants?
+```
+
+#### **Combined Verification**
+```
+First, search for "best React Server Components tutorials", then fetch the content from the most promising result
+```
+
+#### **Large JSON Test (verifies no 5000-char limit)**
+```
+Fetch JSON from https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=2026-01-31
+```
+
+**⚠️ Important Note About Character Limits:**
+The `mcp-fetch-server` now has NO default character limit (unlimited by default). You can still set limits if needed:
+```
+Fetch content from https://example.com with max_length set to 50000
+```
+
 ### Pro Tips for Local Models
 
 **Use these phrases to trigger MCP tools:**
@@ -201,8 +253,8 @@ Fetch JSON from https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?da
 ```
 
 This example verifies that:
-- ✅ The `fetch_json` tool returns complete JSON data (no 5000-char limit)
-- ✅ Large API responses are handled properly
+- ✅ The `fetch_json` tool returns complete JSON data (no limits by default)
+- ✅ Large API responses are handled properly without restrictions
 - ✅ Time zone conversions work correctly
 - ✅ Data sorting and formatting functions as expected
 
@@ -235,6 +287,11 @@ npm run mcp:list
 # Restart servers
 npm run reset:mcp && npm run setup:web-search
 ```
+
+**Tools Not Executing (Model Issue):**
+- ✅ **gpt-oss:20b**: Can execute web search and fetch commands
+- ❌ **qwen2.5-coder:7b**: Recognizes tool calls but cannot execute them
+- Solution: Use `MODEL=gpt-oss npm start` for MCP tools
 
 ## 🔌 IDE Integration
 
