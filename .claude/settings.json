@@ -3,5 +3,18 @@
   "attribution": {
     "commit": "",
     "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "mcp__simple-search__search_web",
+      "mcp__fetch__fetch_html",
+      "mcp__fetch__fetch_json",
+      "mcp__fetch__fetch_markdown",
+      "mcp__fetch__fetch_txt"
+    ],
+    "deny": [
+      "WebFetch",
+      "WebSearch"
+    ]
   }
 }
