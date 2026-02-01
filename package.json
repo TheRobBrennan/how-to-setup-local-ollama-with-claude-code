@@ -1,6 +1,6 @@
 {
   "name": "how-to-setup-local-ollama-with-claude-code",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "🚀 Complete guide to setting up Claude Code with free local Ollama on macOS - no API keys, no billing",
   "homepage": "https://github.com/TheRobBrennan/how-to-setup-local-ollama-with-claude-code#readme",
   "bugs": {
