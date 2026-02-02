@@ -227,36 +227,61 @@ Fetch content from https://example.com with max_length set to 50000
 - `fetch_markdown` - Fetch and convert to Markdown
 - `fetch_txt` - Fetch plain text from URLs
 
-### 🏒 Example: fetch_json with NHL Scores
+### 🏒 Example: Natural Language NHL Games
 
-Test your `fetch_json` tool with this comprehensive example:
+With the `gpt-oss:20b` model and MCP tools configured, you can simply use natural language prompts:
 
 ```bash
-# Ask Claude to:
-Fetch JSON from https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=2026-01-31 and for each unique entry in the games array (unique by id): convert startTimeUTC to Pacific Standard Time (UTC-8) → HH:MM AM/PM, create matchup string as awayTeam.abbrev vs homeTeam.abbrev, determine score/status (if gameState is OFF, FINAL, or gameOutcome.lastPeriodType is REG or gameOutcome.otPeriods > 0: use awayTeam.score – homeTeam.score; if gameState is LIVE or CRIT: show current score + (live); append (OT) if lastPeriodType == OT or otPeriods > 0; append (SO) if lastPeriodType == SO), sort rows by converted start time, and render a markdown table with columns: Time (PST), Match-up, Score / Status
+# Show today's NHL games
+"Show me the NHL games for today."
+
+# Show games for a specific date
+"Show me the NHL games from Tuesday, February 3rd, 2026."
+
+# Alternative formats
+"What NHL games are on today?"
+"Who's playing in the NHL on February 3rd, 2026?"
 ```
 
-**Expected Output:** A formatted table showing:
-- Game times converted to Pacific Standard Time (PST)
-- Games sorted chronologically from earliest to latest
-- Complete game information including teams, scores, and game status
-- All JSON data returned without truncation (94,733+ characters supported)
+**How it works:**
+1. Claude Code uses the `search_web` tool to understand current NHL schedules
+2. Uses `fetch_json` to get real-time data from the NHL scores API
+3. Processes and formats the data into a readable table
+4. Converts times to your local timezone and shows game status
 
 **Sample Output:**
 ```
-| Time (PST)   | Match-up     | Score / Status     |
-|--------------|--------------|--------------------|
-| 9:30 AM      | LAK vs PHI   | 3 – 2 (final) (OT) |
-| 10:00 AM     | COL vs DET   | 5 – 0 (final)      |
-| 12:30 PM     | NYR vs PIT   | 5 – 6 (final)      |
-| ...          | ...          | ...                |
+🏒 NHL Hockey Games
+📅 Sunday, February 01, 2026
+
+┌─────────────┬─────────────────┬─────────────────────┐
+│    Time     │     Matchup     │    Score/Status     │
+├─────────────┼─────────────────┼─────────────────────┤
+│ 12:00 PM    │ LAK @ CAR       │ 2 - 3 FINAL OT      │
+│ 03:30 PM    │ BOS @ TBL       │ 5 - 6 FINAL SO      │
+│ 06:30 PM    │ VGK @ ANA       │ 3 - 4 FINAL         │
+└─────────────┴─────────────────┴─────────────────────┘
 ```
 
-This example verifies that:
-- ✅ The `fetch_json` tool returns complete JSON data (no limits by default)
-- ✅ Large API responses are handled properly without restrictions
-- ✅ Time zone conversions work correctly
-- ✅ Data sorting and formatting functions as expected
+This example demonstrates:
+- ✅ Natural language understanding with local models
+- ✅ Real-time data fetching without API limits
+- ✅ Automatic data processing and formatting
+- ✅ Time zone conversions and game status detection
+
+### 🏒 Verification Prompt
+
+Test the NHL script with this natural language prompt:
+
+```bash
+"Use the appropriate script in package.json and show me NHL games for this coming Tuesday"
+```
+
+This will:
+1. Use `npm run nhl:date -- [date]` with the upcoming Tuesday's date
+2. Fetch real NHL data from the API
+3. Display professional table formatting with game status
+4. Show scheduled games with "SCHEDULED" status
 
 **Avoid these phrases (trigger built-in tools):**
 - "Web search for..." → Tries to use Anthropic's WebSearch
@@ -433,6 +458,28 @@ MODEL=gpt-oss npm start      # Uses gpt-oss
 - `npm run reset:mcp` - Remove all MCP servers for this project
 - `npm run mcp:list` - List all configured MCP servers
 - `npm run mcp:status` - Check MCP server status
+
+### NHL Games
+
+- `npm run nhl:today` - Show today's NHL games (defaults to current date)
+- `npm run nhl:date -- YYYY-MM-DD` - Show NHL games for specific date
+
+**Examples:**
+```bash
+npm run nhl:today                    # Today's games
+npm run nhl:date -- 2026-02-03      # February 3rd, 2026
+npm run nhl:date -- 2026-01-31      # January 31st, 2026
+```
+
+**Output Features:**
+- Professional table formatting with Unicode borders
+- Game times in Pacific Standard Time (PST)
+- Real-time game status (FINAL, IN PROGRESS, SCHEDULED)
+- Period and time remaining for live games
+- Overtime and shootout indicators
+- Formatted date display
+
+**See `examples/README.md` for detailed usage and script information.**
 
 ### Testing
 

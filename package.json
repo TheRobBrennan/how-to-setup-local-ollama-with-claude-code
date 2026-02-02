@@ -22,6 +22,8 @@
     "setup:web-search": "chmod +x scripts/setup-free-web-search.sh && scripts/setup-free-web-search.sh",
     "reset:mcp": "chmod +x scripts/reset-mcp-servers.sh && scripts/reset-mcp-servers.sh",
     "mcp:list": "claude mcp list",
-    "mcp:status": "echo 'Launch Claude Code and type: /mcp'"
+    "mcp:status": "echo 'Launch Claude Code and type: /mcp'",
+    "nhl:today": "chmod +x examples/scripts/nhl/nhl_games.sh && examples/scripts/nhl/nhl_games.sh",
+    "nhl:date": "chmod +x examples/scripts/nhl/nhl_games.sh && examples/scripts/nhl/nhl_games.sh"
   }
 }
