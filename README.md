@@ -283,6 +283,27 @@ This will:
 3. Display professional table formatting with game status
 4. Show scheduled games with "SCHEDULED" status
 
+**Sample Wednesday Games Output:**
+```
+🏒 NHL Hockey Games
+📅 Wednesday, February 04, 2026
+
+┌─────────────┬─────────────────┬─────────────────────┐
+│    Time     │     Matchup     │    Score/Status     │
+├─────────────┼─────────────────┼─────────────────────┤
+│ 04:00 PM    │ BOS @ FLA       │ SCHEDULED           │
+│ 04:00 PM    │ CHI @ CBJ       │ SCHEDULED           │
+│ 04:00 PM    │ MTL @ WPG       │ SCHEDULED           │
+│ 05:00 PM    │ MIN @ NSH       │ SCHEDULED           │
+│ 06:00 PM    │ SJS @ COL       │ SCHEDULED           │
+│ 06:00 PM    │ DET @ UTA       │ SCHEDULED           │
+│ 06:30 PM    │ STL @ DAL       │ SCHEDULED           │
+│ 07:00 PM    │ EDM @ CGY       │ SCHEDULED           │
+│ 07:00 PM    │ VAN @ VGK       │ SCHEDULED           │
+│ 07:00 PM    │ SEA @ LAK       │ SCHEDULED           │
+└─────────────┴─────────────────┴─────────────────────┘
+```
+
 **Avoid these phrases (trigger built-in tools):**
 - "Web search for..." → Tries to use Anthropic's WebSearch
 - "Can you search online..." → May trigger cloud tools
@@ -461,6 +482,21 @@ MODEL=gpt-oss npm start      # Uses gpt-oss
 
 ### NHL Games
 
+**You can enter this entire prompt directly into Claude Code:**
+
+```
+Run the NHL schedule for a specific date:
+
+npm run nhl:date -- <YYYY-MM-DD>
+
+Replace <YYYY-MM-DD> with the desired date (e.g., 2026-02-03).
+
+The script will output a table of games for that day.
+
+Show me the NHL schedule for 2026-02-03.
+```
+
+**Available Scripts:**
 - `npm run nhl:today` - Show today's NHL games (defaults to current date)
 - `npm run nhl:date -- YYYY-MM-DD` - Show NHL games for specific date
 
