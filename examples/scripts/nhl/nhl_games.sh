@@ -31,8 +31,8 @@ curl -s "https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=$DAT
           elif $g.gameState=="LIVE" or $g.gameState=="CRIT" then
             ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + 
             " (" + ($g.periodDescriptor.number | tostring) + 
-            (if $g.periodDescriptor.periodType=="REG" then 
-              "nd" 
+(if $g.periodDescriptor.periodType=="REG" then 
+              (if $g.periodDescriptor.number==1 then "st" elif $g.periodDescriptor.number==2 then "nd" elif $g.periodDescriptor.number==3 then "rd" else "th" end)
             elif $g.periodDescriptor.periodType=="OT" then 
               "OT" 
             elif $g.periodDescriptor.periodType=="SO" then 
