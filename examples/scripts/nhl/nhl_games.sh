@@ -28,7 +28,22 @@ curl -s "https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=$DAT
           if $g.gameState=="OFF" or $g.gameState=="FINAL" then
             ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " FINAL"
           elif $g.gameState=="LIVE" or $g.gameState=="CRIT" then
-            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " IN PROGRESS"
+            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + 
+            " (" + ($g.periodDescriptor.number | tostring) + 
+            (if $g.periodDescriptor.periodType=="REG" then 
+              "nd" 
+            elif $g.periodDescriptor.periodType=="OT" then 
+              "OT" 
+            elif $g.periodDescriptor.periodType=="SO" then 
+              "SO" 
+            else 
+              $g.periodDescriptor.periodType
+            end) + 
+            (if $g.clock.inIntermission then 
+              " - Intermission"
+            else 
+              " - " + $g.clock.timeRemaining
+            end) + ")"
           else
             ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " SCHEDULED"
           end
@@ -63,8 +78,11 @@ curl -s "https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=$DAT
 echo ""
 echo "📊 Game Status Legend:"
 echo "  • FINAL - Game completed"
-echo "  • IN PROGRESS - Game currently being played"
+echo "  • (1st - 15:00) - Live game: 1st period with 15:00 remaining"
+echo "  • (2nd - Intermission) - Live game: 2nd period intermission"
+echo "  • (3rd - 5:30) - Live game: 3rd period with 5:30 remaining"
+echo "  • (OT - 2:15) - Overtime period with 2:15 remaining"
 echo "  • SCHEDULED - Game upcoming"
-echo "  • OT - Overtime"
-echo "  • SO - Shootout"
+echo "  • OT - Game ended in overtime"
+echo "  • SO - Game ended in shootout"
 echo ""
