@@ -24,6 +24,6 @@
     "mcp:list": "claude mcp list",
     "mcp:status": "echo 'Launch Claude Code and type: /mcp'",
     "nhl:today": "chmod +x examples/scripts/nhl/nhl_games.sh && examples/scripts/nhl/nhl_games.sh",
-    "nhl:date": "chmod +x examples/scripts/nhl/nhl_games.sh && examples/scripts/nhl/nhl_games.sh"
+    "nhl:date": "chmod +x examples/scripts/nhl/nhl_games.sh && examples/scripts/nhl/nhl_games.sh # Usage: npm run nhl:date -- 2026-01-31"
   }
 }
