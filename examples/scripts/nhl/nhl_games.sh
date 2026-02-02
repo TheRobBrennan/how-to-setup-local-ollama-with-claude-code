@@ -26,9 +26,11 @@ curl -s "https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=$DAT
         ($g.awayTeam.abbrev + " @ " + $g.homeTeam.abbrev),
         (
           if $g.gameState=="OFF" or $g.gameState=="FINAL" then
-            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring)
+            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " FINAL"
+          elif $g.gameState=="LIVE" or $g.gameState=="CRIT" then
+            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " IN PROGRESS"
           else
-            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " (LIVE)"
+            ($g.awayTeam.score|tostring) + " - " + ($g.homeTeam.score|tostring) + " SCHEDULED"
           end
         )
         + (if $g.gameOutcome.otPeriods > 0 or $g.gameOutcome.lastPeriodType=="OT" then " OT" else "" end)
@@ -60,8 +62,9 @@ curl -s "https://sploosh-ai-hockey-analytics.vercel.app/api/nhl/scores?date=$DAT
 
 echo ""
 echo "📊 Game Status Legend:"
-echo "  • Regular time (e.g., 3 - 2)"
-echo "  • Overtime (OT)"
-echo "  • Shootout (SO)"
-echo "  • Live games marked as (LIVE)"
+echo "  • FINAL - Game completed"
+echo "  • IN PROGRESS - Game currently being played"
+echo "  • SCHEDULED - Game upcoming"
+echo "  • OT - Overtime"
+echo "  • SO - Shootout"
 echo ""
