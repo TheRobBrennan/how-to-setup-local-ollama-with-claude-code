@@ -96,16 +96,19 @@ jobs:
           echo "Checking PR description format..."
           
           # Check for forbidden content in PR description (allow bullets only in Testing section)
-          if grep -v -A 10 "## Testing" pr_body.txt | grep -q -E "(Testing:|checkbox|\[ \]|\[x\]|act command|workflow.*test|local.*test)"; then
+          # Extract only content before ## Testing section to avoid false positives
+          sed '/## Testing/,$d' pr_body.txt > pr_body_before_testing.txt
+          if grep -q -E "(Testing:|checkbox|\[ \]|\[x\]|act command|workflow.*test|local.*test)" pr_body_before_testing.txt; then
             echo "❌ PR description contains testing content or checkboxes outside of Testing section"
             echo "PR descriptions should not include:"
             echo "- Testing sections or checkboxes outside of ## Testing section"
             echo "- Local testing output"
             echo "- Workflow testing references"
             echo "- Act command output"
-            rm -f pr_body.txt
+            rm -f pr_body.txt pr_body_before_testing.txt
             exit 1
           fi
+          rm -f pr_body_before_testing.txt
           
           # Check for proper file link format (relative paths, not full URLs)
           if grep -q -E "\[.*\]\(https://github\.com/.*blob/.*\)" pr_body.txt; then
