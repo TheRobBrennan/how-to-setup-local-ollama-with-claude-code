@@ -43,6 +43,15 @@ trigger: always_on
   - Example inputs/outputs
   - Any dependencies or prerequisites
 
+## Pull Request Descriptions
+
+- Always include complete references in PR descriptions:
+  - Use actual script/feature names: "Added `claude:install` script" NOT "Added script"
+  - Include file references with relative paths: "Updated [`README.md`](README.md)" NOT "Updated README"
+  - Use relative file paths, NEVER full GitHub URLs
+  - Example (correct): "Added `new-feature` to [`package.json`](package.json)"
+  - Example (wrong): "Added feature to package.json" (missing backticks and link)
+
 ## Style Guidelines
 
 - Use consistent heading levels

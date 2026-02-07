@@ -58,6 +58,12 @@ version: revert   # Reverting changes
   - Use code blocks with language specification (e.g., \`\`\`bash, \`\`\`javascript)
   - Keep the description concise but informative
   - Note any breaking changes or important considerations
+  - **ALWAYS include complete references**:
+    - Include actual script/feature names: "Added \`claude:install\` script" NOT "Added script"
+    - Include file references with relative paths: "Updated [\`README.md\`](README.md)" NOT "Updated README"
+    - Use relative file paths, NEVER full GitHub URLs
+    - Example: "Added \`new-feature\` to [\`package.json\`](package.json)" is correct
+    - Example: "Added feature to package.json" is incomplete (missing backticks and link)
 
 - **Code Formatting Rules**:
   - Never automatically commit code changes without explicit approval
