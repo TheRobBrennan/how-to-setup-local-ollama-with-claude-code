@@ -14,6 +14,14 @@ trigger: always_on
   3. Group related scripts under appropriate headings (e.g., "Docker Management", "Testing")
   4. Include any important notes or warnings for potentially destructive commands
 
+### Package.json Script Organization
+
+- When organizing scripts in `package.json`:
+  1. Always place `"start"` as the first script
+  2. Always place `"test"` as the second script
+  3. Alphabetize all remaining scripts after `"start"` and `"test"`
+  4. This standard applies whenever alphabetization of scripts is requested
+
 ### Prerequisites
 
 - List all required software and tools in the Prerequisites section
