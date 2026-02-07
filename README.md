@@ -440,9 +440,15 @@ ollama launch claude --model qwen2.5-coder:7b
 - **RAM**: 8GB+ recommended
 - **⚠️ MCP Tools**: Recognizes tool calls but cannot execute them
 
-## � Available Scripts
+## 📦 Available Scripts
 
 This project includes npm scripts to simplify working with Ollama models:
+
+### Claude Code Management
+
+- `npm run claude:install` - Install Claude Code CLI
+- `npm run claude:remove` - Remove Claude Code CLI
+- `npm run claude:update` - Check for and update Claude Code to latest version
 
 ### Quick Start Scripts
 

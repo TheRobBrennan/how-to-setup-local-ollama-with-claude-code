@@ -14,6 +14,14 @@ trigger: always_on
   3. Group related scripts under appropriate headings (e.g., "Docker Management", "Testing")
   4. Include any important notes or warnings for potentially destructive commands
 
+### Package.json Script Organization
+
+- When organizing scripts in `package.json`:
+  1. Always place `"start"` as the first script
+  2. Always place `"test"` as the second script
+  3. Alphabetize all remaining scripts after `"start"` and `"test"`
+  4. This standard applies whenever alphabetization of scripts is requested
+
 ### Prerequisites
 
 - List all required software and tools in the Prerequisites section
@@ -34,6 +42,15 @@ trigger: always_on
   - Required setup steps
   - Example inputs/outputs
   - Any dependencies or prerequisites
+
+## Pull Request Descriptions
+
+- Always include complete references in PR descriptions:
+  - Use actual script/feature names: "Added `claude:install` script" NOT "Added script"
+  - Include file references with relative paths: "Updated [`README.md`](README.md)" NOT "Updated README"
+  - Use relative file paths, NEVER full GitHub URLs
+  - Example (correct): "Added `new-feature` to [`package.json`](package.json)"
+  - Example (wrong): "Added feature to package.json" (missing backticks and link)
 
 ## Style Guidelines
 
