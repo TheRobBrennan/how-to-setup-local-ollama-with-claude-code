@@ -541,7 +541,7 @@ npm run nhl:date -- 2026-01-31      # January 31st, 2026
 - [`docs/github-setup.md`](docs/github-setup.md) - GitHub integration
 - [`docs/gpt-oss-20b-exploration.md`](docs/gpt-oss-20b-exploration.md) - GPT-OSS model exploration
 
-## 🎁 One More Thing...
+## 🎁 One More Thing
 
 **Claude Cowork** took a look at this repository and created three professional presentations in just a handful of minutes:
 
