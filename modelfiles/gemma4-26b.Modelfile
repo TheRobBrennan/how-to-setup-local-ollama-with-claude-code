@@ -10,10 +10,15 @@ PARAMETER top_k 40
 #   OLLAMA_FLASH_ATTENTION=1
 #   OLLAMA_KV_CACHE_TYPE=q8_0
 #
-# On macOS with Ollama running as a background app, set them in your shell
-# profile (~/.zshrc) and restart Ollama:
+# On macOS, use launchctl to persist these for the menu bar app (recommended):
+#
+#   launchctl setenv OLLAMA_FLASH_ATTENTION 1
+#   launchctl setenv OLLAMA_KV_CACHE_TYPE q8_0
+#   killall Ollama && open -a Ollama
+#
+# Alternatively, add to ~/.zshrc and launch Ollama from a terminal:
 #
 #   echo 'export OLLAMA_FLASH_ATTENTION=1' >> ~/.zshrc
 #   echo 'export OLLAMA_KV_CACHE_TYPE=q8_0' >> ~/.zshrc
 #   source ~/.zshrc
-#   # Then restart Ollama from the menu bar or: killall ollama && ollama serve
+#   killall Ollama && ollama serve

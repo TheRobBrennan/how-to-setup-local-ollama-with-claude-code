@@ -26,7 +26,10 @@ The `q8_0` quantization preserves near-full model quality at 28GB — fitting we
 ## Quick Start
 
 ```bash
-# First-time setup: pull base model and create configured local model (~28GB download)
+# Build configured model and launch Claude Code (always rebuilds from Modelfile)
+npm run model:build:gemma4
+
+# First-time setup only: pull base model and create configured local model (~28GB download)
 npm run model:create:gemma4
 
 # Check for configured model (creates it if missing) then launch Claude Code
@@ -50,14 +53,23 @@ The configured model `gemma4-26b` is created from `gemma4:26b-a4b-it-q8_0` with 
 
 ### Server-Level Settings (environment variables)
 
-`flash_attention` and `kv_cache_quant` are Ollama server settings — they must be set **before starting the Ollama server**, not at launch time. Add to your shell profile and restart Ollama:
+`flash_attention` and `kv_cache_quant` are Ollama server settings — they must be set **before starting the Ollama server**, not at launch time.
+
+**Recommended (macOS menu bar app):** use `launchctl` so the vars persist for Ollama regardless of how it's launched:
+
+```bash
+launchctl setenv OLLAMA_FLASH_ATTENTION 1
+launchctl setenv OLLAMA_KV_CACHE_TYPE q8_0
+killall Ollama && open -a Ollama
+```
+
+**Alternative (terminal-launched server):** add to `~/.zshrc` and start Ollama from a terminal:
 
 ```bash
 echo 'export OLLAMA_FLASH_ATTENTION=1' >> ~/.zshrc
 echo 'export OLLAMA_KV_CACHE_TYPE=q8_0' >> ~/.zshrc
 source ~/.zshrc
-# Restart Ollama from the menu bar, or:
-killall ollama && ollama serve
+killall Ollama && ollama serve
 ```
 
 ## Initial Performance Notes

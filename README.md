@@ -495,6 +495,7 @@ npm run launch:qwen          # Launch qwen2.5-coder:7b
 ### Model-Specific Scripts
 
 **gemma4-26b (configured from gemma4:26b-a4b-it-q8_0):**
+- `npm run model:build:gemma4` - Always rebuild from Modelfile then launch Claude Code
 - `npm run model:create:gemma4` - Pull base model (~28GB) and create configured `gemma4-26b` model
 - `npm run model:remove:gemma4` - Remove the configured `gemma4-26b` model
 - `npm run check:gemma4` - Check if configured model exists, create it if missing
@@ -510,6 +511,10 @@ npm run launch:qwen          # Launch qwen2.5-coder:7b
 - `npm run check:gpt-oss` - Check if model exists, download if missing
 - `npm run start:gpt-oss` - Check for model and start Claude Code
 - `npm run launch:gpt-oss` - Launch directly (skips check)
+
+### Ollama Server Management
+
+- `npm run ollama:restart` - Set optimized server env vars (`OLLAMA_FLASH_ATTENTION`, `OLLAMA_KV_CACHE_TYPE`) and restart Ollama
 
 ### Web Search Setup
 
