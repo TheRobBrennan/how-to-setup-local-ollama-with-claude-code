@@ -76,6 +76,7 @@ ollama pull qwen2.5-coder:7b
 - Size: ~4.7GB download
 
 **Other local model options:**
+- `gemma4:26b-a4b-it-q8_0` (~28GB) - Google's Gemma 4 MoE model, excellent reasoning and agentic tasks
 - `qwen3-coder` (~18GB) - Larger, more capable coding model
 - `starcoder2:3b` (~1.7GB) - Compact coding model
 
@@ -416,6 +417,14 @@ ollama launch claude --model qwen2.5-coder:7b
 
 ## 🤖 Available Models
 
+**gemma4:e4b-it-q8_0 (Fast & Lightweight)**
+- **Size**: 12GB | **Speed**: Fast | **RAM**: 16GB+ | **MCP Tools**: ✅ **Expected to work**
+- **Best For**: Quick tasks, everyday use, multimodal (text + image)
+
+**gemma4:26b-a4b-it-q8_0 (Advanced Reasoning & Agentic)**
+- **Size**: 28GB | **Speed**: Moderate | **RAM**: 32GB+ | **MCP Tools**: ✅ **Expected to work**
+- **Best For**: Complex reasoning, agentic workflows, long-context tasks (256K)
+
 **gpt-oss:20b (Recommended for MCP Tools)**
 - **Size**: 11GB | **Speed**: Slower | **RAM**: 16GB+ | **MCP Tools**: ✅ **Works**
 - **Best For**: Web search, fetching, general tasks
@@ -423,6 +432,28 @@ ollama launch claude --model qwen2.5-coder:7b
 **qwen2.5-coder:7b (Coding Focus)**
 - **Size**: 4.7GB | **Speed**: Fast | **RAM**: 8GB+ | **MCP Tools**: ⚠️ **Limited**
 - **Best For**: Coding, programming tasks
+
+### gemma4:e4b-it-q8_0 (Fast & Lightweight)
+- **Size**: 12GB
+- **Speed**: Fast
+- **Quality**: Frontier-level for its size
+- **Specialization**: Everyday tasks, coding, multimodal understanding
+- **Architecture**: Effective 4B parameters
+- **Context Window**: 128K tokens
+- **RAM**: 16GB+ recommended
+- **✅ MCP Tools**: Expected to work
+- **Multimodal**: Text + Image input supported
+
+### gemma4:26b-a4b-it-q8_0 (Advanced Reasoning & Agentic)
+- **Size**: 28GB
+- **Speed**: Moderate
+- **Quality**: Frontier-level reasoning and agentic capabilities
+- **Specialization**: Reasoning, agentic workflows, coding, and general tasks
+- **Architecture**: Mixture of Experts (MoE) — 26B total params, 4B active
+- **Context Window**: 256K tokens
+- **RAM**: 32GB+ recommended (64GB ideal)
+- **✅ MCP Tools**: Expected to work due to native function-calling support
+- **Note**: Optimal settings per Google — `temperature=1.0`, `top_p=0.95`, `top_k=64`
 
 ### gpt-oss:20b (Recommended for MCP Tools)
 - **Size**: 11GB
@@ -469,15 +500,44 @@ MODEL=qwen npm start         # Explicit qwen
 MODEL=gpt-oss npm start      # Uses gpt-oss
 ```
 
+**Launch directly (skip model check, use when model is already pulled):**
+```bash
+npm run launch:gemma4        # Launch gemma4-26b (configured model)
+npm run launch:gpt-oss       # Launch gpt-oss:20b
+npm run launch:qwen          # Launch qwen2.5-coder:7b
+```
+
 ### Model-Specific Scripts
+
+**gemma4-e4b (fast, configured from gemma4:e4b-it-q8_0):**
+- `npm run model:build:gemma4-e4b` - Always rebuild from Modelfile then launch Claude Code
+- `npm run model:create:gemma4-e4b` - Pull base model (~12GB) and create configured `gemma4-e4b` model
+- `npm run model:remove:gemma4-e4b` - Remove the configured `gemma4-e4b` model
+- `npm run check:gemma4-e4b` - Check if configured model exists, create it if missing
+- `npm run start:gemma4-e4b` - Check for model and start Claude Code
+- `npm run launch:gemma4-e4b` - Launch directly (skips check)
+
+**gemma4-26b (configured from gemma4:26b-a4b-it-q8_0):**
+- `npm run model:build:gemma4` - Always rebuild from Modelfile then launch Claude Code
+- `npm run model:create:gemma4` - Pull base model (~28GB) and create configured `gemma4-26b` model
+- `npm run model:remove:gemma4` - Remove the configured `gemma4-26b` model
+- `npm run check:gemma4` - Check if configured model exists, create it if missing
+- `npm run start:gemma4` - Check for model and start Claude Code
+- `npm run launch:gemma4` - Launch directly (skips check)
 
 **qwen2.5-coder:7b:**
 - `npm run check:qwen` - Check if model exists, download if missing
 - `npm run start:qwen` - Check for model and start Claude Code
+- `npm run launch:qwen` - Launch directly (skips check)
 
 **gpt-oss:20b:**
 - `npm run check:gpt-oss` - Check if model exists, download if missing
 - `npm run start:gpt-oss` - Check for model and start Claude Code
+- `npm run launch:gpt-oss` - Launch directly (skips check)
+
+### Ollama Server Management
+
+- `npm run ollama:restart` - Set optimized server env vars (`OLLAMA_FLASH_ATTENTION`, `OLLAMA_KV_CACHE_TYPE`) and restart Ollama
 
 ### Web Search Setup
 
@@ -539,6 +599,9 @@ npm run nhl:date -- 2026-01-31      # January 31st, 2026
 - [`docs/act-container-management.md`](docs/act-container-management.md) - GitHub Actions testing
 - [`docs/claude-coauthor-management.md`](docs/claude-coauthor-management.md) - Claude coauthor setup
 - [`docs/github-setup.md`](docs/github-setup.md) - GitHub integration
+- [`docs/gemma4-26b-exploration.md`](docs/gemma4-26b-exploration.md) - Gemma 4 26B model exploration
+- [`modelfiles/gemma4-e4b.Modelfile`](modelfiles/gemma4-e4b.Modelfile) - Ollama Modelfile for configured Gemma 4 e4b
+- [`modelfiles/gemma4-26b.Modelfile`](modelfiles/gemma4-26b.Modelfile) - Ollama Modelfile for configured Gemma 4 26B
 - [`docs/gpt-oss-20b-exploration.md`](docs/gpt-oss-20b-exploration.md) - GPT-OSS model exploration
 
 ## 🎁 One More Thing

@@ -1,0 +1,19 @@
+FROM gemma4:e4b-it-q8_0
+
+PARAMETER temperature 1.0
+PARAMETER top_k 40
+
+# Flash attention and KV cache quantization are Ollama server-level settings.
+# They cannot be set in a Modelfile — set these environment variables before
+# starting (or restarting) the Ollama server:
+#
+#   OLLAMA_FLASH_ATTENTION=1
+#   OLLAMA_KV_CACHE_TYPE=q8_0
+#
+# On macOS, use launchctl to persist these for the menu bar app (recommended):
+#
+#   launchctl setenv OLLAMA_FLASH_ATTENTION 1
+#   launchctl setenv OLLAMA_KV_CACHE_TYPE q8_0
+#   killall Ollama && open -a Ollama
+#
+# Or run: npm run ollama:restart
