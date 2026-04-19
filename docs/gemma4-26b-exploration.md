@@ -26,26 +26,39 @@ The `q8_0` quantization preserves near-full model quality at 28GB — fitting we
 ## Quick Start
 
 ```bash
-# Pull the model (28GB download)
-npm run check:gemma4
+# First-time setup: pull base model and create configured local model (~28GB download)
+npm run model:create:gemma4
 
-# Check for model then launch Claude Code
+# Check for configured model (creates it if missing) then launch Claude Code
 npm run start:gemma4
 
-# Launch directly (skips check, use when model is already pulled)
+# Launch directly (skips check, use when model is already created)
 npm run launch:gemma4
 
 # Or run the ollama command directly
-ollama launch claude --model gemma4:26b-a4b-it-q8_0
+ollama launch claude --model gemma4-26b
 ```
 
-## Optimal Configuration
+## Configuration
 
-Per Google's recommendations for best performance:
+### Modelfile Parameters (`modelfiles/gemma4-26b.Modelfile`)
+
+The configured model `gemma4-26b` is created from `gemma4:26b-a4b-it-q8_0` with these baked-in parameters:
 
 - `temperature=1.0`
-- `top_p=0.95`
-- `top_k=64`
+- `top_k=40`
+
+### Server-Level Settings (environment variables)
+
+`flash_attention` and `kv_cache_quant` are Ollama server settings — they must be set **before starting the Ollama server**, not at launch time. Add to your shell profile and restart Ollama:
+
+```bash
+echo 'export OLLAMA_FLASH_ATTENTION=1' >> ~/.zshrc
+echo 'export OLLAMA_KV_CACHE_TYPE=q8_0' >> ~/.zshrc
+source ~/.zshrc
+# Restart Ollama from the menu bar, or:
+killall ollama && ollama serve
+```
 
 ## Initial Performance Notes
 

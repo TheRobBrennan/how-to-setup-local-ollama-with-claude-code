@@ -487,15 +487,17 @@ MODEL=gpt-oss npm start      # Uses gpt-oss
 
 **Launch directly (skip model check, use when model is already pulled):**
 ```bash
-npm run launch:gemma4        # Launch gemma4:26b-a4b-it-q8_0
+npm run launch:gemma4        # Launch gemma4-26b (configured model)
 npm run launch:gpt-oss       # Launch gpt-oss:20b
 npm run launch:qwen          # Launch qwen2.5-coder:7b
 ```
 
 ### Model-Specific Scripts
 
-**gemma4:26b-a4b-it-q8_0:**
-- `npm run check:gemma4` - Check if model exists, download if missing (~28GB)
+**gemma4-26b (configured from gemma4:26b-a4b-it-q8_0):**
+- `npm run model:create:gemma4` - Pull base model (~28GB) and create configured `gemma4-26b` model
+- `npm run model:remove:gemma4` - Remove the configured `gemma4-26b` model
+- `npm run check:gemma4` - Check if configured model exists, create it if missing
 - `npm run start:gemma4` - Check for model and start Claude Code
 - `npm run launch:gemma4` - Launch directly (skips check)
 
@@ -570,6 +572,7 @@ npm run nhl:date -- 2026-01-31      # January 31st, 2026
 - [`docs/claude-coauthor-management.md`](docs/claude-coauthor-management.md) - Claude coauthor setup
 - [`docs/github-setup.md`](docs/github-setup.md) - GitHub integration
 - [`docs/gemma4-26b-exploration.md`](docs/gemma4-26b-exploration.md) - Gemma 4 26B model exploration
+- [`modelfiles/gemma4-26b.Modelfile`](modelfiles/gemma4-26b.Modelfile) - Ollama Modelfile for configured Gemma 4 26B
 - [`docs/gpt-oss-20b-exploration.md`](docs/gpt-oss-20b-exploration.md) - GPT-OSS model exploration
 
 ## 🎁 One More Thing
