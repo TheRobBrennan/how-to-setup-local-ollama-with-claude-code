@@ -6,7 +6,7 @@ This repository is a **template** for setting up **Claude Code** to run locall
 
 Key goals:
 - Run Claude Code entirely on your machine.
-- Use local Ollama models (e.g., `qwen2.5-coder:7b`, `gemma4-26b`, `gpt-oss:20b`).
+- Use local Ollama models — **`gpt-oss:20b` is the preferred model** for agent compatibility and overall performance.
 - Add free web‑search/MCP functionality without external keys.
 - Provide a clean npm‑based workflow for model management, server config, and testing.
 
@@ -51,7 +51,7 @@ Run `npm run <script>` or use the aliases in `package.json`.  All scripts are gr
 | | `mcp:status` | Quick status helper. |
 | **Container / Testing** | `test` | Run all tests & GitHub Actions locally. |
 | | `test:workflows` | Only run GitHub‑Actions workflow tests via `act`. |
-| **Miscellaneous** | `npm start` | Default script; launches Claude Code with the default model (`qwen2.5-coder:7b`). |
+| **Miscellaneous** | `npm start` | Default script; launches Claude Code with the default model (`qwen2.5-coder:7b`). Use `MODEL=gpt-oss npm start` for the preferred model. |
 | | `npm run start:gpt-oss` | Quick launch with `gpt-oss:20b`. |
 | | `npm run ollama:restart` | Restart the Ollama server with optimized env vars. |
 | | `nhl:date`, `nhl:today` | Example script to fetch NHL schedules. |
@@ -108,8 +108,10 @@ Claude Code uses the **Model Context Protocol (MCP)** to perform web search an
 
 ## MCP and Model Requirements
 
-- **`gpt-oss:20b`** – Full MCP support (search & fetch).
-- **`gemma4-26b`** – MCP‑compatible, best for complex reasoning and agentic workflows.
+> **Preferred model: `gpt-oss:20b`** — best overall agent compatibility, full MCP tool execution, and general-purpose performance. Use this for any agentic or web-search tasks.
+
+- **`gpt-oss:20b`** ⭐ – **Preferred.** Full MCP support (search & fetch), reliable tool execution, best all-round performance.
+- **`gemma4-26b`** – MCP‑compatible, best for complex reasoning and long-context agentic workflows.
 - **`gemma4-e4b`** – MCP‑compatible, faster and lighter than `gemma4-26b`.
 - **`qwen2.5-coder:7b`** – Recognizes MCP calls but cannot execute them; use `gpt-oss` for web tasks.
 - **Permissions** – `.claude/settings.json` allows `mcp__fetch__*` and `mcp__simple-search__search_web`.  It denies generic `WebFetch`/`WebSearch` to force MCP usage.
