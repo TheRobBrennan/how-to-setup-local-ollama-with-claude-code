@@ -2,12 +2,47 @@
 
 This directory contains example scripts and demonstrations for the "How to Setup Local Ollama with Claude Code" project.
 
-## 🏒 NHL Games Script
+## 🔍 Docker Vane Example
 
 ### Overview
-The NHL Games script (`scripts/nhl/nhl_games.sh`) provides professional, client-ready display of NHL hockey games with real-time scores and scheduling information.
+The Docker Vane example ([`docker-vane/`](docker-vane/)) demonstrates how to run [Vane](https://github.com/ItzCrazyKns/Vane), a privacy-focused AI search engine, with local Ollama on macOS using Docker Compose.
 
 ### Features
+- **Privacy-Focused**: All reasoning happens locally with Ollama
+- **Source Citations**: Every claim includes verifiable source links
+- **SearxNG Integration**: Bundled web search with privacy features
+- **Docker Compose**: Easy spin up/down with npm scripts
+
+### Usage
+
+#### Quick Start
+```bash
+# Pull qwen3.5:9b model
+npm run check:qwen3.5
+
+# Start Vane container
+npm run docker:vane:up
+
+# Access at http://localhost:3000
+```
+
+#### NPM Scripts
+```bash
+npm run docker:vane:up      # Start Vane container
+npm run docker:vane:down    # Stop Vane container
+npm run docker:vane:restart # Restart Vane container
+npm run docker:vane:logs    # View Vane logs
+```
+
+### Documentation
+See [`docker-vane/README.md`](docker-vane/README.md) for detailed setup instructions, configuration, and troubleshooting.
+
+## 🏒 NHL Games Script
+
+### Script Overview
+The NHL Games script (`scripts/nhl/nhl_games.sh`) provides professional, client-ready display of NHL hockey games with real-time scores and scheduling information.
+
+#### Script Features
 - **Professional Formatting**: Unicode table borders with clean presentation
 - **Date Flexibility**: Show games for any date (past, present, or future)
 - **Real-time Status**: FINAL, IN PROGRESS, SCHEDULED game states
@@ -15,7 +50,7 @@ The NHL Games script (`scripts/nhl/nhl_games.sh`) provides professional, client-
 - **Timezone Support**: All times displayed in Pacific Standard Time (PST)
 - **Comprehensive Legend**: Clear explanations of all game status indicators
 
-### Usage
+#### Script Usage
 
 #### NPM Scripts (Recommended)
 ```bash
