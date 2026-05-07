@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   vane:
     image: itzcrazykns1337/vane:latest

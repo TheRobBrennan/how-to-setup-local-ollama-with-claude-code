@@ -67,20 +67,12 @@ On first launch or in Settings:
 4. Select **qwen3.5:9b** as the chat model
 5. (Optional) Select an embedding model or reuse qwen3.5:9b
 
-## NPM Scripts
-
+### NPM Scripts
 ```bash
-# Start Vane container
-npm run docker:vane:up
-
-# Stop Vane container
-npm run docker:vane:down
-
-# Restart Vane container
-npm run docker:vane:restart
-
-# View Vane logs
-npm run docker:vane:logs
+npm run docker:vane:up      # Start Vane container
+npm run docker:vane:down    # Stop Vane container
+npm run docker:vane:restart # Restart Vane container
+npm run docker:vane:logs    # View Vane logs
 ```
 
 ## Using Vane
