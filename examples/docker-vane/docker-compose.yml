@@ -1,0 +1,23 @@
+services:
+  vane:
+    image: itzcrazykns1337/vane:latest
+    container_name: vane
+    ports:
+      - "3000:3000"
+    volumes:
+      - vane-data:/home/vane/data
+    environment:
+      # On macOS, Docker Desktop provides host.docker.internal
+      # This allows the container to reach Ollama running on the host
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    restart: unless-stopped
+    networks:
+      - vane-network
+
+volumes:
+  vane-data:
+    driver: local
+
+networks:
+  vane-network:
+    driver: bridge
