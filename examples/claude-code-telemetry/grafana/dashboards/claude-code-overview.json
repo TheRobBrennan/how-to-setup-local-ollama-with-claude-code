@@ -476,7 +476,7 @@
           "unit": "s"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 21 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 21 },
       "id": 21,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -529,20 +529,20 @@
           "unit": "s"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 21 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 29 },
       "id": 22,
       "options": {
-        "legend": { "calcs": ["mean", "last"], "displayMode": "table", "placement": "bottom" },
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
         "tooltip": { "mode": "multi" }
       },
       "targets": [
         {
-          "expr": "sum by (model) (rate(ollama_time_per_token_seconds_sum[5m])) / sum by (model) (rate(ollama_time_per_token_seconds_count[5m]))",
+          "expr": "sum by (model) (rate(ollama_request_duration_seconds_count[5m]) * 60)",
           "legendFormat": "{{model}}",
           "refId": "A"
         }
       ],
-      "title": "Avg Time Per Token by Model",
+      "title": "Request Rate by Model (req/min)",
       "type": "timeseries"
     },
     {
@@ -572,7 +572,7 @@
           "unit": "s"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 29 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 21 },
       "id": 55,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -618,22 +618,17 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 29 },
       "id": 23,
       "options": {
-        "legend": { "calcs": ["mean", "last"], "displayMode": "table", "placement": "bottom" },
+        "legend": { "calcs": ["sum", "last"], "displayMode": "table", "placement": "bottom" },
         "tooltip": { "mode": "multi" }
       },
       "targets": [
         {
-          "expr": "sum by (model) (rate(ollama_generated_tokens_total[1m]))",
-          "legendFormat": "Generated - {{model}}",
+          "expr": "sum by (model) (increase(ollama_request_duration_seconds_count[1h]))",
+          "legendFormat": "{{model}}",
           "refId": "A"
-        },
-        {
-          "expr": "sum by (model) (rate(ollama_prompt_tokens_total[1m]))",
-          "legendFormat": "Prompt - {{model}}",
-          "refId": "B"
         }
       ],
-      "title": "Token Throughput by Model (tokens/sec)",
+      "title": "Total Requests by Model (last 1h)",
       "type": "timeseries"
     },
     {
