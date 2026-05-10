@@ -658,7 +658,7 @@
           "unit": "decmbytes"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 29 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 37 },
       "id": 24,
       "options": {
         "legend": { "calcs": ["last"], "displayMode": "table", "placement": "bottom" },
@@ -676,7 +676,7 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 37 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 45 },
       "id": 30,
       "title": "macOS System Resources (requires node_exporter — see README)",
       "type": "row"
@@ -700,7 +700,7 @@
           "max": 1
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 46 },
       "id": 31,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -739,7 +739,7 @@
           "unit": "bytes"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 46 },
       "id": 32,
       "options": {
         "legend": { "calcs": ["last"], "displayMode": "table", "placement": "bottom" },
@@ -788,7 +788,7 @@
           "unit": "short"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 46 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 54 },
       "id": 33,
       "options": {
         "legend": { "calcs": ["mean", "last"], "displayMode": "table", "placement": "bottom" },
@@ -832,7 +832,7 @@
           "unit": "Bps"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 46 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 54 },
       "id": 34,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -871,7 +871,7 @@
           "unit": "Bps"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 54 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 62 },
       "id": 35,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -911,7 +911,7 @@
           "max": 1
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 54 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 62 },
       "id": 36,
       "options": {
         "legend": { "calcs": ["last"], "displayMode": "table", "placement": "bottom" },
@@ -929,7 +929,7 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 62 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 70 },
       "id": 50,
       "title": "Apple Silicon GPU & Power (requires GPU exporter — see README)",
       "type": "row"
@@ -961,7 +961,7 @@
           "max": 1
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 63 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 71 },
       "id": 51,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -995,7 +995,7 @@
           "unit": "hertz"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 63 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 71 },
       "id": 52,
       "options": {
         "legend": { "calcs": ["mean", "last"], "displayMode": "table", "placement": "bottom" },
@@ -1029,7 +1029,7 @@
           "unit": "mwatt"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 71 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 79 },
       "id": 53,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
@@ -1073,7 +1073,7 @@
           "unit": "mwatt"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 71 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 79 },
       "id": 54,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
