@@ -13,7 +13,7 @@
   "author": "Rob Brennan <rob@sploosh.ai>",
   "scripts": {
     "start": "MODEL=${MODEL:-qwen3.5} && npm run start:$MODEL",
-    "test": "npm run test:workflows",
+    "test": "time npm run test:workflows",
     "check:gemma4": "ollama list | grep -q 'gemma4-26b' || npm run model:create:gemma4",
     "check:gemma4-e4b": "ollama list | grep -q 'gemma4-e4b' || npm run model:create:gemma4-e4b",
     "check:gpt-oss": "ollama list | grep -q 'gpt-oss:20b' || ollama pull gpt-oss:20b",
