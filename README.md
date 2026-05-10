@@ -340,7 +340,84 @@ npm run reset:mcp && npm run setup:web-search
 - ❌ **qwen2.5-coder:7b**: Recognizes tool calls but cannot execute them
 - Solution: Use `MODEL=gpt-oss npm start` for MCP tools
 
-## 🔌 IDE Integration
+## � Claude Code Telemetry Monitoring (Optional)
+
+Monitor your Claude Code usage and compare locally-hosted model performance with OpenTelemetry, Prometheus, and Grafana.
+
+> **Why two metric sources?** Claude Code's built-in telemetry only provides aggregate counters (tokens, cost, sessions) — it does not expose per-query response times. The [`ollama-metrics`](https://github.com/NorskHelsenett/ollama-metrics) sidecar is included to provide per-request latency histograms (p50/p95/p99), time-per-token, and RAM usage per model, enabling direct performance comparison across models like `qwen3.5:9b`, `gemma4-26b`, and `gpt-oss:20b`.
+
+### Quick Start
+
+```bash
+# One command to start everything (recommended)
+npm run telemetry:all
+
+# Or step-by-step:
+npm run telemetry:start   # Set up and start the monitoring stack
+npm run telemetry:launch  # Launch Claude Code with telemetry enabled (qwen3.5:9b)
+
+# Or choose a specific model:
+npm run telemetry:launch:claude:gemma4    # gemma4-26b
+npm run telemetry:launch:claude:gemma4-e4b # gemma4-e4b
+npm run telemetry:launch:claude:gpt-oss    # gpt-oss:20b
+```
+
+This will:
+1. Start OpenTelemetry Collector (ports 4317/4318)
+2. Start Ollama Metrics sidecar (port 8080)
+3. Start Prometheus (port 9090)
+4. Start Grafana (port 3001)
+5. Launch Claude Code with telemetry automatically configured
+
+### Access the Dashboards
+
+- **Grafana**: <http://localhost:3001> (admin/admin)
+- **Prometheus**: <http://localhost:9090>
+
+### Available Scripts
+
+```bash
+# Monitoring stack
+npm run telemetry:all     # Start monitoring stack and launch Claude Code with telemetry (one command)
+npm run telemetry:start   # Setup and start the monitoring stack
+npm run telemetry:launch  # Launch Claude Code with telemetry enabled
+npm run telemetry:setup   # Copy .env.example to .env
+npm run telemetry:up      # Start the monitoring stack
+npm run telemetry:verify  # Verify all services are running
+npm run telemetry:down    # Stop the monitoring stack
+npm run telemetry:restart # Restart the monitoring stack
+npm run telemetry:logs    # View logs from all services
+npm run telemetry:status  # Check status of all services
+
+# macOS system metrics (one-time setup)
+npm run telemetry:node-exporter:install  # Install node_exporter via Homebrew
+npm run telemetry:node-exporter:start    # Start as a background service
+npm run telemetry:node-exporter:stop     # Stop the background service
+npm run telemetry:node-exporter:status   # Check if it's running
+```
+
+### Architecture
+
+The monitoring stack runs in Docker containers while Claude Code and Ollama run locally:
+
+```
+Claude Code → OTLP → OpenTelemetry Collector ─┐
+                                               ├─→ Prometheus → Grafana
+Ollama (local) ← poll ← ollama-metrics sidecar ┘
+```
+
+- **Dockerized**: OTel Collector, Ollama Metrics sidecar, Prometheus, Grafana
+- **Local (native)**: Claude Code, Ollama, and `node_exporter` (macOS system metrics)
+
+This project-based approach means telemetry is enabled only when you explicitly launch Claude Code with the `telemetry:launch` script.
+
+> **Why does node_exporter run locally?** Docker Desktop on macOS uses a Linux VM — a Dockerized node_exporter would report the VM's metrics, not your Mac's. Running it natively via Homebrew ensures Prometheus sees your real CPU, memory, and disk metrics.
+
+### Documentation
+
+See [`examples/claude-code-telemetry/README.md`](examples/claude-code-telemetry/README.md) for detailed setup instructions, configuration, and troubleshooting.
+
+## �� IDE Integration
 
 Claude Code works standalone but also integrates with popular IDEs:
 
