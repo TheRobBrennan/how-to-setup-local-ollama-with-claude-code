@@ -2,20 +2,73 @@
 
 This directory contains example scripts and demonstrations for the "How to Setup Local Ollama with Claude Code" project.
 
-## 🔍 Docker Vane Example
+## � Claude Code Telemetry Example
 
-### Overview
+### Claude Code Telemetry Overview
+The Claude Code telemetry example ([`claude-code-telemetry/`](claude-code-telemetry/)) demonstrates how to set up comprehensive telemetry monitoring for Claude Code using OpenTelemetry, Prometheus, and Grafana.
+
+### Claude Code Telemetry Features
+- **OpenTelemetry Collector**: Receives telemetry data from Claude Code via OTLP
+- **Prometheus**: Scrapes and stores metrics from the OTel Collector
+- **Grafana**: Visualizes metrics with customizable dashboards
+- **Easy Setup**: One-command setup with environment configuration
+
+### Claude Code Telemetry Usage
+
+#### Claude Code Telemetry Quick Start
+```bash
+# One command starts everything (recommended)
+# On macOS: auto-installs node_exporter, sets up GPU metrics, starts Docker stack, launches Claude Code
+npm run telemetry:all
+
+# Access Grafana at http://localhost:3001 (admin/admin)
+# Access Prometheus at http://localhost:9090
+```
+
+#### Claude Code Telemetry NPM Scripts
+```bash
+# Monitoring stack
+npm run telemetry:all     # Start everything and launch Claude Code (one command)
+npm run telemetry:open    # Open the Grafana dashboard in your browser
+npm run telemetry:setup   # Copy .env.example to .env
+npm run telemetry:start   # Setup and start the monitoring stack
+npm run telemetry:up      # Start the monitoring stack
+npm run telemetry:down    # Stop the monitoring stack
+npm run telemetry:restart # Restart the monitoring stack
+npm run telemetry:logs    # View logs from all services
+npm run telemetry:status  # Check status of all services
+npm run telemetry:verify  # Verify all services are running
+
+# macOS system metrics (auto-handled by telemetry:all)
+npm run telemetry:node-exporter:install  # Install node_exporter via Homebrew
+npm run telemetry:node-exporter:start    # Start with textfile collector enabled
+npm run telemetry:node-exporter:stop     # Stop node_exporter
+npm run telemetry:node-exporter:status   # Check if running
+
+# Apple Silicon GPU metrics (auto-handled by telemetry:all)
+npm run telemetry:gpu:setup   # One-time sudoers rule for passwordless powermetrics
+npm run telemetry:gpu:start   # Start GPU/ANE/power metrics exporter
+npm run telemetry:gpu:stop    # Stop GPU exporter
+npm run telemetry:gpu:status  # Check if GPU exporter is running
+```
+
+### Claude Code Telemetry Documentation
+See [`claude-code-telemetry/README.md`](claude-code-telemetry/README.md) for detailed setup instructions, configuration, and troubleshooting.
+
+## � Docker Vane Example
+
+### Docker Vane Overview
 The Docker Vane example ([`docker-vane/`](docker-vane/)) demonstrates how to run [Vane](https://github.com/ItzCrazyKns/Vane), a privacy-focused AI search engine, with local Ollama on macOS using Docker Compose.
 
-### Features
+### Docker Vane Features
 - **Privacy-Focused**: All reasoning happens locally with Ollama
 - **Source Citations**: Every claim includes verifiable source links
 - **SearxNG Integration**: Bundled web search with privacy features
 - **Docker Compose**: Easy spin up/down with npm scripts
 
-### Usage
+### Docker Vane Usage
 
-#### Quick Start
+#### Docker Vane Quick Start
 ```bash
 # Pull qwen3.5:9b model
 npm run check:qwen3.5
@@ -26,7 +79,7 @@ npm run docker:vane:up
 # Access at http://localhost:3000
 ```
 
-#### NPM Scripts
+#### Docker Vane NPM Scripts
 ```bash
 npm run docker:vane:up      # Start Vane container
 npm run docker:vane:down    # Stop Vane container
@@ -34,7 +87,7 @@ npm run docker:vane:restart # Restart Vane container
 npm run docker:vane:logs    # View Vane logs
 ```
 
-### Documentation
+### Docker Vane Documentation
 See [`docker-vane/README.md`](docker-vane/README.md) for detailed setup instructions, configuration, and troubleshooting.
 
 ## 🏒 NHL Games Script
@@ -213,10 +266,20 @@ This script demonstrates the power of combining:
 
 ```
 examples/
-├── README.md                    # This file
+├── README.md                           # This file
+├── claude-code-telemetry/              # Claude Code telemetry monitoring
+│   ├── docker-compose.yml              # Monitoring stack orchestration
+│   ├── otel-collector-config.yaml      # OTel Collector configuration
+│   ├── prometheus.yml                  # Prometheus configuration
+│   ├── grafana/                        # Grafana dashboards and provisioning
+│   ├── .env.example                    # Example environment variables
+│   └── README.md                       # Telemetry setup documentation
+├── docker-vane/                        # Privacy-focused AI search engine
+│   ├── docker-compose.yml              # Vane container configuration
+│   └── README.md                       # Vane setup documentation
 └── scripts/
     └── nhl/
-        └── nhl_games.sh         # NHL games script
+        └── nhl_games.sh                # NHL games script
 ```
 
 ## 🚀 Getting Started
