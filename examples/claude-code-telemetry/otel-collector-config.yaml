@@ -1,0 +1,36 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+  attributes:
+    actions:
+      - key: telemetry.sdk.language
+        action: upsert
+        value: "javascript"
+      - key: service.name
+        action: upsert
+        value: "claude-code"
+      - key: deployment.environment
+        action: upsert
+        value: "local"
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    const_labels:
+      exporter: "prometheus"
+    resource_to_telemetry_conversion:
+      enabled: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch, attributes]
+      exporters: [prometheus]

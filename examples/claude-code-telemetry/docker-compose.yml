@@ -1,0 +1,84 @@
+services:
+  # OpenTelemetry Collector - receives telemetry from Claude Code
+  otel-collector:
+    env_file:
+      - .env
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+      - "8889:8889"   # Prometheus exporter metrics
+    networks:
+      - telemetry-network
+    restart: unless-stopped
+
+  # Ollama Metrics Sidecar - exposes Ollama performance metrics for Prometheus
+  ollama-metrics:
+    image: ghcr.io/norskhelsenett/ollama-metrics:latest
+    container_name: ollama-metrics
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    networks:
+      - telemetry-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Prometheus - scrapes metrics from OTel Collector
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - telemetry-network
+    restart: unless-stopped
+    depends_on:
+      - otel-collector
+      - ollama-metrics
+
+  # Grafana - visualizes metrics from Prometheus
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3001:3000"
+    networks:
+      - telemetry-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  telemetry-network:
+    driver: bridge
