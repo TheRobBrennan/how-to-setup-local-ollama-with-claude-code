@@ -381,6 +381,7 @@ This will:
 ```bash
 # Monitoring stack
 npm run telemetry:all     # Start monitoring stack and launch Claude Code with telemetry (one command)
+npm run telemetry:open    # Open the Grafana dashboard in your browser
 npm run telemetry:start   # Setup and start the monitoring stack
 npm run telemetry:launch  # Launch Claude Code with telemetry enabled
 npm run telemetry:setup   # Copy .env.example to .env

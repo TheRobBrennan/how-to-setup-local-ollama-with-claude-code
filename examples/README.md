@@ -29,6 +29,7 @@ npm run telemetry:all
 ```bash
 # Monitoring stack
 npm run telemetry:all     # Start everything and launch Claude Code (one command)
+npm run telemetry:open    # Open the Grafana dashboard in your browser
 npm run telemetry:setup   # Copy .env.example to .env
 npm run telemetry:start   # Setup and start the monitoring stack
 npm run telemetry:up      # Start the monitoring stack

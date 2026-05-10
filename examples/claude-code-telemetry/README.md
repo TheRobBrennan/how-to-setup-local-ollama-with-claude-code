@@ -222,6 +222,7 @@ For a complete list of Claude Code metrics, see the [Claude Code Monitoring Docu
 
 ```bash
 npm run telemetry:all     # Start monitoring stack and launch Claude Code with telemetry (one command)
+npm run telemetry:open    # Open the Grafana dashboard in your browser
 npm run telemetry:start   # Setup and start the monitoring stack (one command)
 npm run telemetry:launch  # Launch Claude Code with telemetry enabled
 npm run telemetry:setup   # Copy .env.example to .env
