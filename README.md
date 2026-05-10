@@ -363,11 +363,13 @@ npm run telemetry:launch:claude:gpt-oss    # gpt-oss:20b
 ```
 
 This will:
-1. Start OpenTelemetry Collector (ports 4317/4318)
-2. Start Ollama Metrics sidecar (port 8080)
-3. Start Prometheus (port 9090)
-4. Start Grafana (port 3001)
-5. Launch Claude Code with telemetry automatically configured
+1. Install and start `node_exporter` for macOS system metrics (auto, macOS only)
+2. Set up passwordless `powermetrics` and start Apple Silicon GPU exporter (auto, macOS only)
+3. Start OpenTelemetry Collector (ports 4317/4318)
+4. Start Ollama Metrics sidecar (port 8080)
+5. Start Prometheus (port 9090)
+6. Start Grafana (port 3001)
+7. Launch Claude Code with telemetry automatically configured
 
 ### Access the Dashboards
 
@@ -389,11 +391,17 @@ npm run telemetry:restart # Restart the monitoring stack
 npm run telemetry:logs    # View logs from all services
 npm run telemetry:status  # Check status of all services
 
-# macOS system metrics (one-time setup)
-npm run telemetry:node-exporter:install  # Install node_exporter via Homebrew
-npm run telemetry:node-exporter:start    # Start as a background service
-npm run telemetry:node-exporter:stop     # Stop the background service
+# macOS system metrics (auto-handled by telemetry:all)
+npm run telemetry:node-exporter:install  # Install node_exporter via Homebrew (one-time)
+npm run telemetry:node-exporter:start    # Start with textfile collector enabled
+npm run telemetry:node-exporter:stop     # Stop the background process
 npm run telemetry:node-exporter:status   # Check if it's running
+
+# Apple Silicon GPU metrics (auto-handled by telemetry:all)
+npm run telemetry:gpu:setup   # One-time sudoers rule for passwordless powermetrics
+npm run telemetry:gpu:start   # Start GPU/ANE/power metrics exporter
+npm run telemetry:gpu:stop    # Stop GPU exporter
+npm run telemetry:gpu:status  # Check if GPU exporter is running
 ```
 
 ### Architecture
@@ -401,13 +409,15 @@ npm run telemetry:node-exporter:status   # Check if it's running
 The monitoring stack runs in Docker containers while Claude Code and Ollama run locally:
 
 ```
-Claude Code → OTLP → OpenTelemetry Collector ─┐
-                                               ├─→ Prometheus → Grafana
-Ollama (local) ← poll ← ollama-metrics sidecar ┘
+Claude Code → OTLP → OpenTelemetry Collector ────────────┐
+                                                          ├─→ Prometheus → Grafana
+Ollama (local) ← proxy ← ollama-metrics sidecar ─────────┘        ↑
+node_exporter (native) → :9100 ──────────────────────────────────────┤
+apple-silicon-gpu-exporter → textfile → node_exporter ───────────────┘
 ```
 
 - **Dockerized**: OTel Collector, Ollama Metrics sidecar, Prometheus, Grafana
-- **Local (native)**: Claude Code, Ollama, and `node_exporter` (macOS system metrics)
+- **Local (native)**: Claude Code, Ollama, `node_exporter`, and Apple Silicon GPU exporter
 
 This project-based approach means telemetry is enabled only when you explicitly launch Claude Code with the `telemetry:launch` script.
 

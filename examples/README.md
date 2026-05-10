@@ -17,11 +17,9 @@ The Claude Code telemetry example ([`claude-code-telemetry/`](claude-code-teleme
 
 #### Claude Code Telemetry Quick Start
 ```bash
-# Set up environment configuration
-npm run telemetry:setup
-
-# Start the monitoring stack
-npm run telemetry:start
+# One command starts everything (recommended)
+# On macOS: auto-installs node_exporter, sets up GPU metrics, starts Docker stack, launches Claude Code
+npm run telemetry:all
 
 # Access Grafana at http://localhost:3001 (admin/admin)
 # Access Prometheus at http://localhost:9090
@@ -29,6 +27,8 @@ npm run telemetry:start
 
 #### Claude Code Telemetry NPM Scripts
 ```bash
+# Monitoring stack
+npm run telemetry:all     # Start everything and launch Claude Code (one command)
 npm run telemetry:setup   # Copy .env.example to .env
 npm run telemetry:start   # Setup and start the monitoring stack
 npm run telemetry:up      # Start the monitoring stack
@@ -36,6 +36,19 @@ npm run telemetry:down    # Stop the monitoring stack
 npm run telemetry:restart # Restart the monitoring stack
 npm run telemetry:logs    # View logs from all services
 npm run telemetry:status  # Check status of all services
+npm run telemetry:verify  # Verify all services are running
+
+# macOS system metrics (auto-handled by telemetry:all)
+npm run telemetry:node-exporter:install  # Install node_exporter via Homebrew
+npm run telemetry:node-exporter:start    # Start with textfile collector enabled
+npm run telemetry:node-exporter:stop     # Stop node_exporter
+npm run telemetry:node-exporter:status   # Check if running
+
+# Apple Silicon GPU metrics (auto-handled by telemetry:all)
+npm run telemetry:gpu:setup   # One-time sudoers rule for passwordless powermetrics
+npm run telemetry:gpu:start   # Start GPU/ANE/power metrics exporter
+npm run telemetry:gpu:stop    # Stop GPU exporter
+npm run telemetry:gpu:status  # Check if GPU exporter is running
 ```
 
 ### Claude Code Telemetry Documentation

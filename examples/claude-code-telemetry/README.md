@@ -28,38 +28,44 @@ Ollama (local) ← poll ← ollama-metrics sidecar ┘
 
 ## Quick Start
 
-### 0. Install node_exporter (macOS System Metrics)
-
-> **What is node_exporter?** It's a Prometheus exporter that runs natively on your Mac and exposes CPU, memory, disk, network, and load metrics to Prometheus. Because our Prometheus runs inside Docker (which uses a Linux VM on macOS), the exporter **must** run locally — not in Docker — to report actual host metrics.
+### Recommended: One Command
 
 ```bash
-npm run telemetry:node-exporter:install  # Installs via Homebrew
-npm run telemetry:node-exporter:start    # Starts as a background service
+npm run telemetry:all
 ```
 
-Verify it's running:
+This single command handles everything in order:
+1. Installs and starts `node_exporter` for macOS system metrics (macOS only, auto-installs via Homebrew)
+2. Creates a passwordless `sudo` rule for `powermetrics` and starts the Apple Silicon GPU exporter (macOS only, prompts for password once)
+3. Tears down any existing Docker stack
+4. Copies `.env.example` → `.env` and starts OTel Collector, ollama-metrics sidecar, Prometheus, and Grafana
+5. Launches Claude Code with telemetry configured
+
+> After the first run, all subsequent `telemetry:all` invocations are fully automatic — no password prompts.
+
+---
+
+### Manual Step-by-Step (alternative)
+
+#### 0. Install node_exporter (macOS System Metrics)
+
+> **What is node_exporter?** Because Prometheus runs inside Docker (Linux VM on macOS), `node_exporter` must run natively to report real host CPU, memory, disk, and network metrics.
+
 ```bash
-curl http://localhost:9100/metrics | head -20
+npm run telemetry:node-exporter:install  # Installs via Homebrew (one-time)
+npm run telemetry:node-exporter:start    # Starts with textfile collector enabled
 ```
 
-You only need to do this once — Homebrew services persist across reboots.
+#### 0b. Set Up Apple Silicon GPU Metrics (macOS only)
 
-> **GPU metrics**: Apple Silicon GPU utilization IS available via `powermetrics`. A custom exporter is included — see [Step 0b](#0b-set-up-apple-silicon-gpu-metrics-macos-only) below.
-
-### 0b. Set Up Apple Silicon GPU Metrics (macOS only)
-
-> **How it works**: The `apple-silicon-gpu-exporter.py` script samples `sudo powermetrics` every 15 seconds and writes Prometheus `.prom` files to `/tmp/node-exporter-textfile/`. `node_exporter` reads that directory via `--collector.textfile.directory` and exposes the metrics to Prometheus. This is the same data source Activity Monitor uses, but routed into your dashboard.
-
-This requires a one-time `sudo` setup to allow `powermetrics` to run without a password prompt:
+> **How it works**: `apple-silicon-gpu-exporter.py` samples `sudo powermetrics` (plist format) every 15 seconds and writes Prometheus `.prom` files to `/tmp/node-exporter-textfile/`. `node_exporter` reads that directory via `--collector.textfile.directory`. This is the same data source Activity Monitor uses.
 
 ```bash
-npm run telemetry:gpu:setup   # Adds /etc/sudoers.d/powermetrics-exporter
-npm run telemetry:gpu:start   # Starts the background exporter
+npm run telemetry:gpu:setup   # One-time: adds /etc/sudoers.d/powermetrics-exporter
+npm run telemetry:gpu:start   # Starts the background GPU exporter
 ```
 
-> **`telemetry:all` handles this automatically** — `gpu:setup` and `gpu:start` are included in the startup sequence. The first run will prompt for your password once to create the sudoers rule; all subsequent runs are passwordless.
-
-### 1. Set Up Environment Configuration
+#### 1. Set Up Environment Configuration
 
 **⚠️ IMPORTANT: You must create a `.env` file before starting the monitoring stack**
 
